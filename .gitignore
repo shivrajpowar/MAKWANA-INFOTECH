@@ -1,0 +1,26 @@
+# Node modules
+node_modules/
+
+# Angular build output
+dist/
+out-tsc/
+
+# Environment files
+src/environments/*.ts
+
+# Log files
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# IDE files
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Temporary files
+*.tmp
