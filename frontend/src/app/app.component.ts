@@ -12,6 +12,7 @@ import { FooterComponent } from './pages/footer/footer.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+  
   title = 'frontend';
   isLoginPage = false;
   showLayout = true;

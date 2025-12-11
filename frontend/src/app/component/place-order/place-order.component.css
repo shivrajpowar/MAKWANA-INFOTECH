@@ -1,0 +1,158 @@
+.cart-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+.left {
+  width: 65%;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.right {
+  width: 30%;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  height: fit-content;
+}
+
+.cart-item {
+  display: flex;
+  gap: 15px;
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
+}
+
+.product-img {
+  width: 90px;
+  height: 110px;
+}
+
+.item-details h3 {
+  margin: 0;
+}
+
+.price-box {
+  margin: 8px 0;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.mrp {
+  text-decoration: line-through;
+  margin-left: 10px;
+  color: gray;
+}
+
+.off {
+  color: green;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.qty-box {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.qty-box button {
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+}
+
+.actions {
+  margin-top: 10px;
+}
+
+.actions button {
+  margin-right: 15px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.remove {
+  color: red;
+}
+
+.place-btn {
+  background: orange;
+  border: none;
+  padding: 12px 20px;
+  color: white;
+  font-size: 18px;
+  border-radius: 5px;
+  margin-top: 25px;
+  cursor: pointer;
+}
+
+/* PRICE DETAILS BOX */
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.green {
+  color: green;
+}
+
+.save-green {
+  margin-top: 10px;
+  color: green;
+  font-weight: bold;
+}
+
+/* POPUP */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-box {
+  background: #fff;
+  padding: 25px;
+  width: 350px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  background: #ccc;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.remove-btn {
+  background: red;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
