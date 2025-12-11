@@ -1,3 +1,11 @@
+<app-header (pageChange)="goToPage($event)"></app-header>
 
+<div *ngIf="currentPage === 'busy-mobile'">
+  <app-busy-mobile></app-busy-mobile>
+</div>
 
-<router-outlet />
+<div *ngIf="currentPage === 'home'">
+  <router-outlet></router-outlet>
+</div>
+
+<app-footer *ngIf="currentPage === 'home'"></app-footer>

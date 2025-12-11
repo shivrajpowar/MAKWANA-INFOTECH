@@ -1,0 +1,27 @@
+
+<div class="register-page">
+  <div class="register-panel">
+    <div class="panel-title">Welcome to Busy</div>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label>User Type</label>
+      <input formControlName="userType" />
+      <label>First Name</label>
+      <input formControlName="firstName" />
+      <label>Last Name</label>
+      <input formControlName="lastName" />
+      <label>Email Id</label>
+      <input formControlName="email" />
+      <label>Mobile No</label>
+      <input formControlName="mobile" />
+      <label>Company Name</label>
+      <input formControlName="companyName" />
+      <label>Address</label>
+      <input formControlName="address" />
+      <label>Password</label>
+      <input type="password" formControlName="password" />
+      <label>Re Type Password</label>
+      <input type="password" formControlName="repassword" />
+      <button type="submit">Create</button>
+    </form>
+  </div>
+</div>
