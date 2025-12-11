@@ -1,0 +1,194 @@
+/* Prevent horizontal scrolling */
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Main container */
+.busy-container {
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Common card box styling */
+.login-box,
+.register-box,
+.forgot-box,
+.reset-box,
+.success-box {
+  width: 360px;
+  padding: 25px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease;
+  box-sizing: border-box;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Titles */
+.login-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #8d153f;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Form Rows */
+.form-row {
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row label {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.form-row input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.2s;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-row input:focus {
+  border-color: #8d153f;
+}
+
+/* Buttons */
+.btn {
+  width: 100%;
+  padding: 12px;
+  background: #8d153f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #a71a4c;
+}
+
+/* Links (Fixed for two lines) */
+.links {
+  margin-top: 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.link {
+  color: #8d153f;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.link:hover {
+  color: #a71a4c;
+}
+
+/* Success message */
+.success-msg {
+  color: #444;
+  text-align: center;
+  margin: 15px 0;
+  font-size: 14px;
+}
+
+/* MAIN PAGE AFTER LOGIN */
+.main-page {
+  width: 100%;
+  max-width: 900px;
+  background: white;
+  padding: 25px;
+  margin: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #eee;
+}
+
+.brand {
+  font-size: 20px;
+  font-weight: bold;
+  color: #8d153f;
+}
+
+.user-area {
+  font-size: 14px;
+  color: #444;
+}
+
+/* Menu */
+.menu {
+  margin: 20px 0;
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.menu a {
+  cursor: pointer;
+  font-size: 15px;
+  color: #8d153f;
+  transition: 0.2s;
+}
+
+.menu a:hover {
+  color: #a71a4c;
+  text-decoration: underline;
+}
+
+/* Content */
+.content {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #444;
+}
+
+/* Back Button */
+.back-btn {
+  margin-top: 25px;
+  width: auto;
+  padding: 10px 20px;
+  background: #444;
+  border-radius: 6px;
+}
+
+.back-btn:hover {
+  background: black;
+}
