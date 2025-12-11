@@ -1,48 +1,11 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Makwana</a>
+<app-header (pageChange)="goToPage($event)"></app-header>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-      data-bs-target="#navbarNavDropdown">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+<div *ngIf="currentPage === 'busy-mobile'">
+  <app-busy-mobile></app-busy-mobile>
+</div>
 
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
+<div *ngIf="currentPage === 'home'">
+  <router-outlet></router-outlet>
+</div>
 
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/product-page">Product-Page</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/place-order"></a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/login"></a>
-        </li>
-
-         <li class="nav-item">
-          <a class="nav-link" routerLink="/address"></a>
-        </li>
-
-         <li class="nav-item">
-          <a class="nav-link" routerLink="/order-success"></a>
-        </li>
-
-         <li class="nav-item">
-          <a class="nav-link" routerLink="/payment"></a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/summary"></a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/add-address"></a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-<router-outlet />
+<app-footer *ngIf="currentPage === 'home'"></app-footer>

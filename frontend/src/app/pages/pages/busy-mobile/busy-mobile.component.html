@@ -1,0 +1,134 @@
+<div class="busy-container">
+
+  <!-- ================== LOGIN SCREEN ================== -->
+  <div class="login-box" *ngIf="!showRegister && !showForgot && !showReset && !showSuccess">
+
+    <div class="login-title">Welcome to Busy</div>
+
+    <div class="form-row">
+      <label>User Type</label>
+      <select [(ngModel)]="loginUserType">
+        <option value="" disabled selected>Select User Type</option>
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+        <option value="subuser">Sub User</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Email ID</label>
+      <input type="text" />
+    </div>
+
+    <div class="form-row">
+      <label>Password</label>
+      <input type="password" />
+    </div>
+
+    <div class="actions">
+      <button class="btn" (click)="onLogin()">Login</button>
+    </div>
+
+    <div class="links">
+      <div>
+        <a class="link" (click)="openRegister()">First Time? Register</a>
+      </div>
+      <div>
+        <a class="link" (click)="openForgot()">Forgot Password?</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================== REGISTER SCREEN ================== -->
+  <div class="register-box" *ngIf="showRegister">
+
+    <div class="login-title">Register - First Time</div>
+
+    <div class="mb-3">
+  <label for="userType" class="form-label">User Type</label>
+  <select id="userType" class="form-select" [(ngModel)]="registerUserType">
+    <option value="">Select User Type</option>
+    <option value="admin">Admin</option>
+    <option value="user">User</option>
+    <option value="subuser">Sub User</option>
+  </select>
+</div>
+
+
+    <div class="form-row"><label>First Name</label><input type="text" /></div>
+    <div class="form-row"><label>Last Name</label><input type="text" /></div>
+    <div class="form-row"><label>Email</label><input type="email" /></div>
+    <div class="form-row"><label>Mobile</label><input type="text" /></div>
+    <div class="form-row"><label>Company Name</label><input type="text" /></div>
+    <div class="form-row"><label>Address</label><input type="text" /></div>
+    <div class="form-row"><label>Country</label><input type="text" /></div>
+    <div class="form-row"><label>State</label><input type="text" /></div>
+    <div class="form-row"><label>District</label><input type="text" /></div>
+    <div class="form-row"><label>Password</label><input type="password" /></div>
+    <div class="form-row"><label>Re-Type Password</label><input type="password" /></div>
+    <div class="form-row"><label>OTP</label><input type="text" /></div>
+
+    <div class="actions">
+      <button class="btn" (click)="onRegister()">Create</button>
+    </div>
+
+    <div class="links">
+      <a class="link" (click)="closeRegister()">Back to Login</a>
+    </div>
+  </div>
+
+
+  <!-- ================== FORGOT PASSWORD SCREEN ================== -->
+  <div class="forgot-box" *ngIf="showForgot">
+    <div class="login-title">Forgot Password</div>
+
+    <div class="form-row">
+      <label>Enter your Web ID / Email</label>
+      <input type="email" [(ngModel)]="forgotEmail" />
+    </div>
+
+    <div class="actions">
+      <button class="btn" (click)="sendResetLink()">Send Reset Link</button>
+    </div>
+
+    <div class="links">
+      <a class="link" (click)="goBack()">Back to Login</a>
+    </div>
+  </div>
+
+
+  <!-- ================== RESET PASSWORD SCREEN ================== -->
+  <div class="reset-box" *ngIf="showReset">
+    <div class="login-title">Reset Password</div>
+
+    <div class="form-row">
+      <label>New Password</label>
+      <input type="password" [(ngModel)]="newPassword" />
+    </div>
+
+    <div class="form-row">
+      <label>Confirm Password</label>
+      <input type="password" [(ngModel)]="confirmPassword" />
+    </div>
+
+    <div class="actions">
+      <button class="btn" (click)="resetPassword()">Update Password</button>
+    </div>
+
+    <div class="links">
+      <a class="link" (click)="goBack()">Back to Login</a>
+    </div>
+  </div>
+
+
+  <!-- ================== SUCCESS SCREEN ================== -->
+  <div class="success-box" *ngIf="showSuccess">
+    <div class="login-title">Email Sent!</div>
+    <p class="success-msg">
+      A password reset link has been sent to your email address.
+    </p>
+    <button class="btn" (click)="goBack()">Back to Login</button>
+  </div>
+
+</div>

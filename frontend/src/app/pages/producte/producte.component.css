@@ -1,0 +1,88 @@
+.product-card {
+  border: 1px solid #e2e2e2;
+  padding: 20px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(0,0,0,0.08);
+}
+
+/* 🔥 Product Image Bigger Size */
+.product-card img {
+  width: 220px;        /* SIZE वाढवली */
+  height: auto;        /* proportion maintain */
+  margin: 15px auto;
+  display: block;
+  padding: 15px;
+  background: transparent;
+  border-radius: 6px;
+  object-fit: contain; /* image न ताणता show */
+}
+
+/* BUY BUTTON */
+.buy-btn {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 0;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.buy-btn:hover {
+  background: #0056b3;
+}
+
+/* Model Dropdown Row */
+.model-select-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.model-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6c757d;
+  white-space: nowrap;
+}
+
+.model-dropdown {
+  font-size: 14px;
+  padding: 3px 8px;
+  min-width: 190px;
+}
+.product-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+.product-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s forwards;
+}
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.btn-primary {
+  transition: background-color 0.3s, transform 0.2s;
+}
+.btn-primary:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+.product-card img {
+  transition: transform 0.3s;
+}
+.product-card img:hover {
+  transform: scale(1.1);
+}
+.collapse {
+  transition: height 0.4s ease;
+}
+
