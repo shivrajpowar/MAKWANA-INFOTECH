@@ -1,0 +1,205 @@
+<div class="container-fluid mt-4">
+    <div class="row">
+
+        <!-- LEFT FILTER PANEL -->
+        <!-- LEFT FILTER PANEL -->
+        <div class="col-md-3">
+            <div class="sidebar">
+
+                <div class="d-flex justify-content-between">
+                    <strong>Filter</strong>
+                    <a href="http://localhost:4200/product" (click)="clearAll()">Clear All</a>
+
+                </div>
+
+                <!-- CATEGORIES -->
+                <div class="filter-item mb-2">
+                    <h6 data-bs-toggle="collapse" data-bs-target="#cat">CATEGORIES</h6>
+                    <div id="cat" class="collapse show">
+                        <p class="text-muted">Products</p>
+                    </div>
+                    <hr />
+                </div>
+
+                <!-- PRICE -->
+                <h6>PRICE</h6>
+
+                <input type="range" class="form-range" min="0" max="100000" [(ngModel)]="maxPrice"
+                    (input)="applyPrice()" />
+
+                <div class="d-flex mt-2">
+                    <input class="form-control me-2" placeholder="Min" type="number" [(ngModel)]="minPrice"
+                        (input)="applyPrice()" />
+
+                    <input class="form-control" placeholder="Max" type="number" [(ngModel)]="maxPrice"
+                        (input)="applyPrice()" />
+                </div>
+
+                <br>
+                <!-- BRAND -->
+                <div class="filter-item mb-2">
+                    <h6 class="filter-title d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                        data-bs-target="#brand" (shown.bs.collapse)="toggle('brand', true)"
+                        (hidden.bs.collapse)="toggle('brand', false)">
+                        BRAND
+                        <span class="icon" [class.rotate]="isOpen['brand']">▼</span>
+                    </h6>
+
+                    <div id="brand" class="collapse">
+                        <label>
+                            <input type="checkbox" (change)="onBrandChange($event, 'Samsung')" />
+                            Samsung
+                        </label><br />
+
+                        <label>
+                            <input type="checkbox" (change)="onBrandChange($event, 'LG')" />
+                            LG
+                        </label><br />
+
+                        <label>
+                            <input type="checkbox" (change)="onBrandChange($event, 'Sony')" />
+                            Sony
+                        </label>
+
+                    </div>
+                    <hr />
+                </div>
+
+
+
+                <!-- CUSTOMER RATINGS -->
+                <div class="filter-item mb-2">
+                    <h6 class="filter-title d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                        data-bs-target="#rating" (shown.bs.collapse)="toggle('rating', true)"
+                        (hidden.bs.collapse)="toggle('rating', false)">
+                        CUSTOMER RATINGS
+                        <span class="icon" [class.rotate]="isOpen['rating']">▼</span>
+                    </h6>
+
+                    <div id="rating" class="collapse">
+                        <label>
+                            <input type="checkbox" (change)="onRatingChange($event, 4)" />
+                            4★ & above
+                        </label><br />
+
+                        <label>
+                            <input type="checkbox" (change)="onRatingChange($event, 3)" />
+                            3★ & above
+                        </label>
+                    </div>
+                    <hr />
+                </div>
+
+                <!-- OFFERS -->
+                <div class="filter-item mb-2">
+                    <h6 class="filter-title d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                        data-bs-target="#offers" (shown.bs.collapse)="toggle('offers', true)"
+                        (hidden.bs.collapse)="toggle('offers', false)">
+                        OFFERS
+                        <span class="icon" [class.rotate]="isOpen['offers']">▼</span>
+                    </h6>
+
+                    <div id="offers" class="collapse">
+                        <label><input type="checkbox" /> No Cost EMI</label><br />
+                        <label><input type="checkbox" /> Special Price</label>
+                    </div>
+                    <hr />
+                </div>
+
+                <!-- DISCOUNT -->
+                <div class="filter-item mb-2">
+                    <h6 class="filter-title d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                        data-bs-target="#discount" (shown.bs.collapse)="toggle('discount', true)"
+                        (hidden.bs.collapse)="toggle('discount', false)">
+                        DISCOUNT
+                        <span class="icon" [class.rotate]="isOpen['discount']">▼</span>
+                    </h6>
+
+                    <div id="discount" class="collapse">
+                        <label><input type="checkbox" /> 50% or more</label><br />
+                        <label><input type="checkbox" /> 30% or more</label>
+                    </div>
+                    <hr />
+                </div>
+
+                <!-- AVAILABILITY -->
+                <div class="filter-item mb-2">
+                    <h6 class="filter-title d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                        data-bs-target="#available" (shown.bs.collapse)="toggle('available', true)"
+                        (hidden.bs.collapse)="toggle('available', false)">
+                        AVAILABILITY
+                        <span class="icon" [class.rotate]="isOpen['available']">▼</span>
+                    </h6>
+
+                    <div id="available" class="collapse">
+                        <label><input type="checkbox" /> In Stock</label>
+                    </div>
+                    <hr />
+                </div>
+
+                <!-- GST INVOICE -->
+                <div class="filter-item mb-2">
+                    <h6 class="filter-title d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                        data-bs-target="#gst" (shown.bs.collapse)="toggle('gst', true)"
+                        (hidden.bs.collapse)="toggle('gst', false)">
+                        GST INVOICE AVAILABLE
+                        <span class="icon" [class.rotate]="isOpen['gst']">▼</span>
+                    </h6>
+
+                    <div id="gst" class="collapse">
+                        <label><input type="checkbox" /> Yes</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- PRODUCT LIST -->
+        <div class="col-md-9">
+            <div class="row g-4">
+
+                <!-- PRODUCT CARD LOOP -->
+                <div class="col-md-4" *ngFor="let p of filteredProducts">
+                    <div class="product-card text-center p-3 bg-white border rounded"
+                        style="padding-bottom:25px !important;">
+
+
+
+
+                        <h5 class="mt-3 text-uppercase fw-bold" style="font-size:17px;">{{ p.title }}</h5>
+                        <p class="text-muted" style="margin-top:-6px;">(Rental License)</p>
+
+                        <div class="border p-4" style="min-height:260px;">
+                            <img [src]="p.img" class="product-img" />
+                        </div>
+
+                        <div class="mt-3 model-select-row">
+                            <label class="model-label">Select Model:</label>
+
+                            <select class="form-select model-dropdown">
+                                <option *ngFor="let m of p.models">{{ m }}</option>
+                            </select>
+                        </div>
+
+
+
+                        <h4 class="fw mt-2">INR {{ p.price }}</h4>
+                        <p class="text-muted">18% GST Applicable</p>
+
+
+                        <button class="btn btn-primary w-50"
+        style="font-size:14px; padding:6px 0;"
+        (click)="buyNow(p.id)">
+  BUY NOW
+</button>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
