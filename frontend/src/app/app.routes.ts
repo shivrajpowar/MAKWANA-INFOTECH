@@ -1,22 +1,13 @@
 import { Routes } from '@angular/router';
- 
-import { ProducteComponent } from './pages/producte/producte.component';
-import { ViewProducteComponent } from './pages/view-producte/view-producte.component';
-import { CartComponent } from './pages/cart/cart.component';
+import { HomeComponent } from './pages/home/home.component';
+import { BusyMobileComponent } from './pages/pages/busy-mobile/busy-mobile.component';
 
 export const routes: Routes = [
-    
-  { path: 'producte', component: ProducteComponent },
+  { path: '', component: HomeComponent },
   
-  // Dynamic route with ID
-  { path: 'view-producte/:id', component: ViewProducteComponent },
+  { path: 'login', loadComponent: () => import('./pages/features/auth/login/login.component').then(m => m.LoginComponent) },
 
-  // Redirect empty path
-  { path: '', redirectTo: 'product', pathMatch: 'full' },
-  { path: '**', redirectTo: 'product' },
-
-  {path:'cart',
-    component:CartComponent
-  }
-    
+  { path: 'busy-mobile', component: BusyMobileComponent },
+  
+  { path: '**', redirectTo: '' },
 ];

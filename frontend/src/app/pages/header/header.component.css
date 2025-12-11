@@ -1,0 +1,124 @@
+
+  .header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #8d153f;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+.brand-title {
+  font-size: 28px;
+  font-weight: 700;
+}  
+
+/* user-area */
+.user-area {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.user-area a {
+  color: #ffd54f;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.user-area .login-btn {
+  color: #ffd54f;
+  font-weight: 700;
+}
+
+/* nav */
+.nav-bar {
+  background: #6f1331;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+.nav-bar a {
+  color: white;
+  margin-right: 18px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* dropdown wrapper: absolute positioned near the header (adjust as needed) */
+.login-dropdown-wrapper {
+  position: absolute;
+  top: 66px; /* adjust to sit below header */
+  right: 18px; /* align right edge with header area; adjust if needed */
+  z-index: 2000;
+}
+
+/* card */
+.login-dropdown-card {
+  width: 320px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.15);
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+/* role tabs */
+.role-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.role-tab {
+  flex: 1;
+  padding: 8px 6px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: #fafafa;
+  cursor: pointer;
+  font-weight: 700;
+}
+.role-tab.active {
+  background: linear-gradient(#8d153f, #6f1331);
+  color: white;
+  border-color: rgba(0,0,0,0.08);
+}
+
+/* form */
+.login-form .form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+.login-form label {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.login-form input {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+.error {
+  color: #c62828;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+.btn {
+  background: #8d153f;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: default;
+}
