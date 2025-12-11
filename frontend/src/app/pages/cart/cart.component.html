@@ -1,0 +1,41 @@
+<div class="container my-4" *ngIf="cartItems.length > 0; else emptyCart">
+
+  <h3 class="fw-bold mb-4">🛒 My Cart</h3>
+
+  <div class="row" *ngFor="let item of cartItems; let i = index">
+    <div class="col-md-2 text-center">
+      <img [src]="item.image" class="img-fluid rounded" style="height:100px;">
+    </div>
+
+    <div class="col-md-6">
+      <h5>{{ item.title }}</h5>
+      <p class="text-muted mb-1">Price: ₹{{ item.price }}</p>
+
+      <input type="number" [(ngModel)]="item.qty" min="1" class="form-control w-25" />
+    </div>
+
+    <div class="col-md-2 text-end">
+      <b>₹{{ item.price * item.qty }}</b>
+    </div>
+
+    <div class="col-md-2 text-end">
+      <button class="btn btn-danger btn-sm" (click)="removeItem(i)">Remove</button>
+    </div>
+
+    <hr class="my-3">
+  </div>
+
+  <div class="text-end mt-4">
+    <h4>Total: <b class="text-success">₹{{ updateTotal() }}</b></h4>
+    <button class="btn btn-primary mt-3 px-4">Checkout</button>
+  </div>
+
+</div>
+
+<ng-template #emptyCart>
+  <div class="container text-center mt-5">
+    <h3>Your Cart is Empty</h3>
+    <p class="text-muted">Add items to your cart to continue.</p>
+  </div>
+</ng-template>
+
