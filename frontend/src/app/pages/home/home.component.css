@@ -1,3 +1,18 @@
+/* nav */
+.nav-bar {
+  background: #6f1331;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+.nav-bar a {
+  color: white;
+  margin-right: 18px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+
 .comparison-container {
   padding: 30px;
   text-align: center;

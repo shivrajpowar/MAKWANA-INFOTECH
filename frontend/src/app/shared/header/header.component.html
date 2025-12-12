@@ -5,8 +5,6 @@
   
 
 
-
-
   <div class="user-area">
     <!-- Login link opens the dropdown instead of navigating -->
     <a class="login-btn" href="#" (click)="toggleLoginDropdown($event)" #loginAnchor>
@@ -18,18 +16,6 @@
   </div>
 </div>
 
-<nav class="nav-bar">
-  <a href="#" (click)="goTo('home', $event)">Home</a>
-
-  <a routerLink="/Products">Products</a>
-
-  <a href="#" (click)="openBusyApp($event)">Busy On Mobile App</a>
-
-  <a routerLink="/Download">Download</a>
-  <a routerLink="/Utility">Utility</a>
-  <a routerLink="/Support">Support</a>
-  <a routerLink="/About Us">About Us</a>
-</nav>
 
 <div class="login-dropdown-wrapper" *ngIf="showLoginDropdown" #dropdown>
   <div class="login-dropdown-card">
