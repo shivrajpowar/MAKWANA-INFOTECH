@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
+import { HomeComponent } from './pages/home/home.component';
+import { BusyMobileComponent } from './pages/pagesV/busy-mobile/busy-mobile.component';
 
-import { BusyMobileComponent } from './Pages/pagesV/busy-mobile/busy-mobile.component';
-import { HomeComponent } from './Pages/home/home.component';
+ 
 
 
 export const routes: Routes = [
