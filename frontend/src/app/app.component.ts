@@ -4,7 +4,7 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { HeaderComponent } from './shared/header/header.component';
-import { HomeComponent } from './pages/home/home.component';
+
 
 @Component({
   selector: 'app-root',

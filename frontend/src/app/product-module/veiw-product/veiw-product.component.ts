@@ -1,18 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { CartService } from '../../services/cart.service';
 
 @Component({
-  selector: 'app-view-producte',
-  imports: [CommonModule,FormsModule, ],
-  templateUrl: './view-producte.component.html',
-  styleUrl: './view-producte.component.css'
+  selector: 'app-veiw-product',
+  imports: [CommonModule,FormsModule],
+  templateUrl: './veiw-product.component.html',
+  styleUrl: './veiw-product.component.css'
 })
-export class ViewProducteComponent {
-
- 
+export class VeiwProductComponent  implements OnInit {
   productId: number | null = null;
   productTitle: string = '';
   productCode: string = '';
@@ -66,4 +63,5 @@ export class ViewProducteComponent {
 
     alert("🛒 Product Added to Cart!");
   }
+
 }

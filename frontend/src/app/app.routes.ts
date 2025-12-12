@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
-import { BusyMobileComponent } from './pages/pages/busy-mobile/busy-mobile.component';
+
+import { BusyMobileComponent } from './Pages/pagesV/busy-mobile/busy-mobile.component';
+import { HomeComponent } from './Pages/home/home.component';
+
 
 export const routes: Routes = [
     {
@@ -9,5 +11,10 @@ export const routes: Routes = [
    // { path: 'home', component: HomeComponent },
 {
    path:'busy-mobile',component:BusyMobileComponent
+},
+{
+   path:"products",
+   loadChildren: () => import('./product-module/product-module.module').then(m => m.ProductModuleModule) 
+   
 }
 ];

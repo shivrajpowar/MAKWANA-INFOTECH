@@ -1,18 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-producte',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './producte.component.html',
-  styleUrls: ['./producte.component.css']
+  selector: 'app-product',
+  imports: [FormsModule,CommonModule],
+  templateUrl: './product.component.html',
+  styleUrl: './product.component.css'
 })
-export class ProducteComponent {
-
-  // PRICE RANGE DEFAULT VALUES
+export class ProductComponent {
+   // PRICE RANGE DEFAULT VALUES
   minPrice: number = 0;
   maxPrice: number = 100000;
 
@@ -94,7 +92,10 @@ export class ProducteComponent {
     this.filteredProducts = [...this.products];
   }
  
-  buyNow(productId: number) {
-    this.router.navigate(['/view-producte', productId]); // <-- Navigate to dynamic route
-  }
+buyNow(productId: number) {
+  this.router.navigate(['/products/view-product', productId]); // ✅ correct
+}
+
+
+
 }
