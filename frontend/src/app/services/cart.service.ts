@@ -5,11 +5,23 @@ import { Injectable } from '@angular/core';
 })
 export class CartService {
 
-  constructor() { }
- cartItems: any[] = [];
+  cartItems: any[] = [];
+
+  constructor() {}
 
   addToCart(product: any) {
-    this.cartItems.push(product);
+    const existingItem = this.cartItems.find(
+      item => item.id === product.id
+    );
+
+    if (existingItem) {
+      existingItem.qty++;
+    } else {
+      this.cartItems.push({
+        ...product,
+        qty: 1
+      });
+    }
   }
 
   getCartItems() {
@@ -21,8 +33,14 @@ export class CartService {
   }
 
   getTotal() {
-    return this.cartItems.reduce((total, item) =>
-      total + (item.price * item.qty), 0
+    return this.cartItems.reduce(
+      (total, item) => total + (item.price * item.qty),
+      0
     );
+  }
+
+  // ✅ ADD THIS (THIS FIXES YOUR ERROR)
+  clearCart() {
+    this.cartItems = [];
   }
 }

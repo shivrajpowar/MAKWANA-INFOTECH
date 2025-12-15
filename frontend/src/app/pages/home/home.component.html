@@ -1,14 +1,41 @@
 
 
 <nav class="nav-bar">
-  <a routerLink="">Home</a>
-  <a routerLink="products">Products</a>
-  <a routerLink="/busy-mobile">Busy On Mobile App</a>
-  <a routerLink="">Download</a>
-  <a routerLink="">Utility</a>
-  <a routerLink="">Support</a>
-  <a routerLink="">About Us</a>
+  <div class="nav-container">
+    <!-- Desktop links (left side) -->
+    <div class="nav-links desktop-links">
+      <a routerLink="">Home</a>
+      <a routerLink="products">Products</a>
+      <a routerLink="/busy-mobile">Busy On Mobile App</a>
+      <a routerLink="">Download</a>
+      <a routerLink="">Utility</a>
+      <a routerLink="">Support</a>
+      <a routerLink="">About Us</a>
+    </div>
+
+    <!-- Hamburger icon (mobile) right -->
+    <span class="hamburger" (click)="toggleMenu()">☰</span>
+
+    <!-- Mobile slide menu -->
+    <div class="nav-links mobile-links" [class.open]="isMenuOpen">
+      <span class="close-btn" (click)="closeMenu()">×</span>
+      <a routerLink="" (click)="closeMenu()">Home</a>
+      <a routerLink="products" (click)="closeMenu()">Products</a>
+      <a routerLink="/busy-mobile" (click)="closeMenu()">Busy On Mobile App</a>
+      <a routerLink="" (click)="closeMenu()">Download</a>
+      <a routerLink="" (click)="closeMenu()">Utility</a>
+      <a routerLink="" (click)="closeMenu()">Support</a>
+      <a routerLink="" (click)="closeMenu()">About Us</a>
+    </div>
+
+    <!-- Overlay for mobile menu -->
+    <div class="overlay" *ngIf="isMenuOpen" (click)="closeMenu()"></div>
+  </div>
 </nav>
+
+
+
+
 
 
 <div class="comparison-container">

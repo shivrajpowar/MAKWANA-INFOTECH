@@ -18,14 +18,12 @@
     <!-- QUANTITY -->
     <div class="col-md-3 d-flex align-items-center">
       <button class="btn btn-sm btn-outline-secondary" (click)="decreaseQty(i)">−</button>
-
       <input type="number"
              [(ngModel)]="item.qty"
              class="form-control mx-2"
              style="width: 60px;"
              min="1"
              (change)="updateTotal()">
-
       <button class="btn btn-sm btn-outline-secondary" (click)="increaseQty(i)">+</button>
     </div>
 
@@ -42,7 +40,10 @@
   <!-- TOTAL SECTION -->
   <div class="text-end mt-4">
     <h4>Total: ₹ {{ total }}</h4>
-    <button class="btn btn-success mt-2"> PLACE ORDER</button>
+    <button class="btn btn-success mt-2" (click)="goToPlaceOrder()">
+  PLACE ORDER
+</button>
+
   </div>
 
 </div>
@@ -51,9 +52,7 @@
 <ng-template #emptyCart>
   <div class="text-center mt-5">
     <h4>Your Cart is Empty 🛒</h4>
-    <a routerLink="/products" class="btn btn-primary mt-3">
-      Continue Shopping
-    </a>
+    <a routerLink="/products" class="btn btn-primary mt-3">Continue Shopping</a>
   </div>
 </ng-template>
 

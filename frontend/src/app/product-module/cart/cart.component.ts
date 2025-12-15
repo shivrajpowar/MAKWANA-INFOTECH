@@ -2,22 +2,41 @@ import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
+declare var bootstrap: any; // Required for Bootstrap 5 modal
 
 @Component({
   selector: 'app-cart',
-  imports: [CommonModule,FormsModule],
+    standalone: true, 
+  imports: [CommonModule, FormsModule,],
   templateUrl: './cart.component.html',
-  styleUrl: './cart.component.css'
+  styleUrls: ['./cart.component.css']  // ✅ Corrected
 })
-export class CartComponent implements OnInit{
- cartItems: any[] = [];
+export class CartComponent implements OnInit {
+  cartItems: any[] = [];
   total: number = 0;
 
-  constructor(private cartService: CartService) {}
+  // Modal related
+  itemToRemove: any = null;
+  modalInstance: any;
+   
+
+ constructor(
+  private cartService: CartService,
+  private router: Router   // ✅ ADD THIS
+) {}
+
 
   ngOnInit() {
     this.cartItems = this.cartService.getCartItems();
     this.updateTotal();
+
+    // Initialize Bootstrap modal
+    const modalEl = document.getElementById('removeModal');
+    if (modalEl) {
+      this.modalInstance = new bootstrap.Modal(modalEl, { keyboard: false });
+    }
   }
 
   increaseQty(index: number) {
@@ -40,16 +59,24 @@ export class CartComponent implements OnInit{
   updateTotal() {
     this.total = this.cartService.getTotal();
   }
-  // आधीचा removeItem() function जसा आहे तसाच राहील
 
-confirmRemove(i: number) {
-  const isConfirmed = confirm(`Are you sure you want to remove "${this.cartItems[i].title}" from the cart?`);
-  if (isConfirmed) {
-    this.removeItem(i);
+  // Open modal for remove confirmation
+  openRemoveModal(index: number) {
+    this.itemToRemove = this.cartItems[index];
+    this.modalInstance.show();
   }
-}
 
-// Existing removeItem function:
- 
+  // Confirm remove from modal
+  confirmRemove() {
+    const index = this.cartItems.indexOf(this.itemToRemove);
+    if (index > -1) {
+      this.cartService.removeItem(index);
+      this.updateTotal();
+    }
+    this.modalInstance.hide();
+  }
+  goToPlaceOrder() {
+  this.router.navigate(['/products/place-order']);
+}
 
 }
