@@ -1,43 +1,87 @@
-
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-busy-mobile',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './busy-mobile.component.html',
   styleUrls: ['./busy-mobile.component.css']
 })
 export class BusyMobileComponent {
- // LOGIN STATES
-  isLoggedIn = false;
+
+  // SCREEN STATE
   showRegister = false;
-  showForgot = false;
-  showReset = false;
-  showSuccess = false;
 
-  // USER TYPE DROPDOWNS
-  userTypes = ['Admin', 'User', 'SubUser'];
-
+  // ================= LOGIN FIELDS =================
   loginUserType: string = '';
+  loginEmail: string = '';
+  loginPassword: string = '';
+
+  // ================= REGISTER FIELDS =================
   registerUserType: string = '';
+  firstName: string = '';
+  lastName: string = '';
+  regEmail: string = '';
+  mobile: string = '';
+  company: string = '';
+  address: string = '';
+  country: string = '';
+  state: string = '';
+  district: string = '';
+  registerPassword: string = '';
+  registerRePassword: string = '';
+  otp: string = '';
 
-  // FORGOT PASSWORD DATA
-  forgotEmail = '';
-  newPassword = '';
-  confirmPassword = '';
+  constructor(private router: Router) {}
 
-  // LOGIN
-  onLogin() {
-    if (!this.loginUserType) {
-      alert("Select User Type");
+  // ================= FORM SUBMIT =================
+  onSubmit(form: NgForm) {
+    if (form.invalid) {
+      form.control.markAllAsTouched();
       return;
     }
-    this.isLoggedIn = true;
+
+    // ---------- LOGIN ----------
+    if (!this.showRegister) {
+      console.log('Login Data:', {
+        userType: this.loginUserType,
+        email: this.loginEmail,
+        password: this.loginPassword
+      });
+
+      this.router.navigate(['/busypage']);
+      return;
+    }
+
+    // ---------- REGISTER ----------
+    if (this.registerPassword !== this.registerRePassword) {
+      return;
+    }
+
+    console.log('Register Data:', {
+      userType: this.registerUserType,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.regEmail,
+      mobile: this.mobile,
+      company: this.company,
+      address: this.address,
+      country: this.country,
+      state: this.state,
+      district: this.district,
+      password: this.registerPassword,
+      otp: this.otp
+    });
+
+    alert('Registered Successfully!');
+    this.closeRegister();
+    form.resetForm();
   }
 
-  // REGISTER
+  // ================= UI ACTIONS =================
   openRegister() {
     this.showRegister = true;
   }
@@ -45,61 +89,4 @@ export class BusyMobileComponent {
   closeRegister() {
     this.showRegister = false;
   }
-
-  onRegister() {
-    if (!this.registerUserType) {
-      alert("Select User Type");
-      return;
-    }
-
-    alert("Registered Successfully!");
-    this.closeRegister();
-  }
-
-  // ******** FORGOT PASSWORD ********
-  openForgot() {
-    this.showForgot = true;
-  }
-
-  sendResetLink() {
-    if (!this.forgotEmail.trim()) {
-      alert("Enter valid Email or Web ID");
-      return;
-    }
-
-    this.showForgot = false;
-    this.showSuccess = true;
-
-    console.log("Reset link sent to:", this.forgotEmail);
-  }
-
-  // Return to Login
-  goBack() {
-    this.showForgot = false;
-    this.showReset = false;
-    this.showSuccess = false;
-  }
-
-  // ******** RESET PASSWORD ********
-  resetPassword() {
-    if (!this.newPassword || !this.confirmPassword) {
-      alert("Enter both fields.");
-      return;
-    }
-
-    if (this.newPassword !== this.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-
-    alert("Password updated successfully!");
-    this.goBack();
-  }
-
-  // LOGOUT
-  goBackToLogin() {
-    this.isLoggedIn = false;
-  }
-
 }
-

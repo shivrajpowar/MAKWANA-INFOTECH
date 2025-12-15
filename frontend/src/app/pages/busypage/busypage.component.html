@@ -1,0 +1,36 @@
+
+<nav class="nav-bar">
+
+  <!-- BRAND -->
+  
+
+  <!-- HAMBURGER -->
+  <div class="menu-toggle" (click)="menuOpen = !menuOpen">
+    ☰
+  </div>
+
+  <!-- NAV LINKS -->
+  <div class="nav-links" [class.open]="menuOpen">
+    <a routerLink="/" (click)="menuOpen = false">Company</a>
+    <a routerLink="/admin" (click)="menuOpen = false">Administration</a>
+    <a routerLink="/transactions" (click)="menuOpen = false">Transactions</a>
+    <a routerLink="/display" (click)="menuOpen = false">Display</a>
+
+    <button
+      *ngIf="isLoggedIn"
+      class="logout-btn mobile-only"
+      (click)="logout()">
+      Logout
+    </button>
+  </div>
+
+  <!-- DESKTOP LOGOUT -->
+  <button
+    *ngIf="isLoggedIn"
+    class="logout-btn desktop-only"
+    (click)="logout()">
+    Logout
+  </button>
+
+</nav>
+

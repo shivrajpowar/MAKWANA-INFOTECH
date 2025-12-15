@@ -1,0 +1,82 @@
+/* NAV BAR */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  background: #7a1535;
+  padding: 12px 20px;
+  color: white;
+  position: relative;
+}
+
+.brand {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* LINKS */
+.nav-links {
+  display: flex;
+  gap: 20px;
+  margin-left: 40px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+}
+
+/* LOGOUT */
+.logout-btn {
+  margin-left: auto;
+  padding: 6px 14px;
+  background: white;
+  color: #7a1535;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* HAMBURGER */
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 56px;
+    left: 0;
+    width: 100%;
+    background: #7a1535;
+    flex-direction: column;
+    padding: 15px;
+    display: none;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    margin-top: 10px;
+  }
+}
+
+/* DESKTOP */
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none;
+  }
+}
