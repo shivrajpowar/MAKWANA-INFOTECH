@@ -1,0 +1,114 @@
+<!-- ================= USER AREA ================= -->
+<div class="user-area">
+
+  <!-- LOGIN / USER BUTTON -->
+  <button
+    class="login-btn"
+    *ngIf="!isLoggedIn"
+    (click)="toggleLoginDropdown($event)"
+    #loginAnchor>
+    Login
+  </button>
+
+  <!-- USER INFO -->
+  <div class="user-info" *ngIf="isLoggedIn">
+    <span class="user-name">
+      {{ loggedRole }} : {{ loggedName || 'User' }}
+    </span>
+
+    <button
+      class="logout-btn"
+      (click)="logout()">
+      Logout
+    </button>
+  </div>
+</div>
+
+<!-- ================= DROPDOWN ================= -->
+<div
+  class="login-dropdown"
+  *ngIf="showLoginDropdown"
+  #dropdown>
+
+  <div class="login-card">
+
+    <!-- ROLE TABS -->
+    <div class="role-tabs" *ngIf="!showSignup">
+      <button
+        [class.active]="selectedRole === 'Admin'"
+        (click)="selectRole('Admin')">
+        Admin
+      </button>
+      <button
+        [class.active]="selectedRole === 'User'"
+        (click)="selectRole('User')">
+        User
+      </button>
+      <button
+        [class.active]="selectedRole === 'Subuser'"
+        (click)="selectRole('Subuser')">
+        Subuser
+      </button>
+    </div>
+
+    <!-- ================= LOGIN FORM ================= -->
+    <form *ngIf="!showSignup" [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" formControlName="webId" />
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" formControlName="password" />
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="link-btn" (click)="openSignup()">
+          Sign Up
+        </button>
+
+        <button
+          type="submit"
+          class="primary-btn"
+          [disabled]="loginForm.invalid">
+          Login as {{ selectedRole }}
+        </button>
+      </div>
+    </form>
+
+    <!-- ================= SIGNUP FORM ================= -->
+    <form *ngIf="showSignup" [formGroup]="signupForm" (ngSubmit)="submitSignup()">
+
+      <div class="form-group">
+        <label>Name</label>
+        <input formControlName="name" />
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input formControlName="email" />
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" formControlName="password" />
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="link-btn" (click)="backToLogin()">
+          Back to Login
+        </button>
+
+        <button
+          type="submit"
+          class="success-btn"
+          [disabled]="signupForm.invalid">
+          Create Account
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>

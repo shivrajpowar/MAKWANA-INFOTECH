@@ -1,36 +1,83 @@
-
-<nav class="nav-bar">
+<nav class="navbar navbar-expand-lg custom-navbar px-3 py-2">
 
   <!-- BRAND -->
-  
+  <!-- <a class="navbar-brand text-white fw-bold me-3" routerLink="/">Busy App</a> -->
 
   <!-- HAMBURGER -->
-  <div class="menu-toggle" (click)="menuOpen = !menuOpen">
+  <button class="navbar-toggler text-white" type="button" (click)="menuOpen = !menuOpen">
     ☰
-  </div>
-
-  <!-- NAV LINKS -->
-  <div class="nav-links" [class.open]="menuOpen">
-    <a routerLink="/" (click)="menuOpen = false">Company</a>
-    <a routerLink="/admin" (click)="menuOpen = false">Administration</a>
-    <a routerLink="/transactions" (click)="menuOpen = false">Transactions</a>
-    <a routerLink="/display" (click)="menuOpen = false">Display</a>
-
-    <button
-      *ngIf="isLoggedIn"
-      class="logout-btn mobile-only"
-      (click)="logout()">
-      Logout
-    </button>
-  </div>
-
-  <!-- DESKTOP LOGOUT -->
-  <button
-    *ngIf="isLoggedIn"
-    class="logout-btn desktop-only"
-    (click)="logout()">
-    Logout
   </button>
 
-</nav>
+  <!-- NAV LINKS -->
+  <div class="collapse navbar-collapse" [class.show]="menuOpen">
 
+    <!-- LEFT LINKS -->
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-3">
+      <li class="nav-item">
+        <a class="nav-link text-white" routerLink="/company" (click)="menuOpen = false">Company</a>
+      </li>
+      <li class="nav-item dropdown">
+        <!-- ADMINISTRATION -->
+        <a class="nav-link dropdown-toggle text-white" href="#" role="button" (click)="toggleAdminDropdown($event)">
+          Administration
+        </a>
+        <!-- DROPDOWN MENU -->
+        <ul class="dropdown-menu" [class.show]="adminDropdownOpen">
+          <!-- ACCOUNT MASTER -->
+          <li>
+            <a class="dropdown-item" routerLink="/administration/account-master" (click)="closeMenu()">
+              Account Master
+            </a>
+          </li>
+          <!-- ITEM MASTER -->
+          <li>
+            <a class="dropdown-item" routerLink="/administration/item-master" (click)="closeMenu()">
+              Item Master
+            </a>
+          </li>
+
+        </ul>
+      </li>
+    
+     <li class="nav-item dropdown">
+        <!-- TRANSACTIONS -->
+        <a class="nav-link dropdown-toggle text-white" href="#" role="button" (click)="toggleTransactionsDropdown($event)">
+          Transactions
+        </a>
+        <!-- DROPDOWN MENU -->
+        <ul class="dropdown-menu" [class.show]="transactionsDropdownOpen">
+          <!-- SALES ORDER -->
+          <li>
+            <a class="dropdown-item" routerLink="/transaction/sales-order" (click)="closeMenu()">
+              Sales Order
+            </a>
+          </li>
+          <!-- SALES -->
+          <li>
+            <a class="dropdown-item" routerLink="/transaction/sales" (click)="closeMenu()">
+              Sales
+            </a>
+          </li>
+          <!-- RECEIPT -->
+          <li>
+            <a class="dropdown-item" routerLink="/transaction/receipt" (click)="closeMenu()">
+              Receipt
+            </a>
+          </li>
+
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" routerLink="/display" (click)="menuOpen = false">Display</a>
+      </li>
+    </ul>
+
+    <!-- RIGHT LOGOUT -->
+    <div class="d-flex">
+      <button *ngIf="isLoggedIn" class="btn btn-outline-light" (click)="logout()">
+        Logout
+      </button>
+    </div>
+
+  </div>
+</nav>

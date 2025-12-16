@@ -1,0 +1,194 @@
+<div class="busy-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-7 col-lg-5">
+
+        <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+          <div class="card register-card shadow">
+
+            <!-- HEADER -->
+            <div class="register-header text-center">
+              First Time Register
+            </div>
+
+            <!-- BODY -->
+            <div class="card-body">
+
+              <!-- User Type -->
+              <div class="mb-3">
+                <label class="form-label">User Type</label>
+                <select class="form-select"
+                        name="registerUserType"
+                        [(ngModel)]="registerUserType"
+                        required
+                        #rut="ngModel">
+                  <option value="">Select User Type</option>
+                  <option value="admin">Admin</option>
+                  <option value="user">User</option>
+                  <option value="subuser">Sub User</option>
+                </select>
+                <small class="text-danger" *ngIf="rut.invalid && rut.touched">
+                  User Type is required
+                </small>
+              </div>
+
+              <!-- First & Last Name -->
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">First Name</label>
+                  <input class="form-control"
+                         type="text"
+                         name="firstName"
+                         [(ngModel)]="firstName"
+                         required
+                         #fn="ngModel">
+                  <small class="text-danger" *ngIf="fn.invalid && fn.touched">
+                    Required
+                  </small>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Last Name</label>
+                  <input class="form-control"
+                         type="text"
+                         name="lastName"
+                         [(ngModel)]="lastName"
+                         required>
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input class="form-control"
+                       type="email"
+                       name="regEmail"
+                       [(ngModel)]="regEmail"
+                       required
+                       email
+                       #re="ngModel">
+                <small class="text-danger" *ngIf="re.invalid && re.touched">
+                  Valid email required
+                </small>
+              </div>
+
+              <!-- Mobile -->
+              <div class="mb-3">
+                <label class="form-label">Mobile</label>
+                <input class="form-control"
+                       type="text"
+                       name="mobile"
+                       [(ngModel)]="mobile"
+                       pattern="^[0-9]{10}$"
+                       required
+                       #mob="ngModel">
+                <small class="text-danger" *ngIf="mob.invalid && mob.touched">
+                  10 digit mobile required
+                </small>
+              </div>
+
+              <!-- Company -->
+              <div class="mb-3">
+                <label class="form-label">Company Name</label>
+                <input class="form-control"
+                       type="text"
+                       name="company"
+                       [(ngModel)]="company"
+                       required>
+              </div>
+
+              <!-- Address -->
+              <div class="mb-3">
+                <label class="form-label">Address</label>
+                <input class="form-control"
+                       type="text"
+                       name="address"
+                       [(ngModel)]="address"
+                       required>
+              </div>
+
+              <!-- Country / State / District -->
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">Country</label>
+                  <input class="form-control"
+                         type="text"
+                         name="country"
+                         [(ngModel)]="country"
+                         required>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">State</label>
+                  <input class="form-control"
+                         type="text"
+                         name="state"
+                         [(ngModel)]="state"
+                         required>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label">District</label>
+                  <input class="form-control"
+                         type="text"
+                         name="district"
+                         [(ngModel)]="district"
+                         required>
+                </div>
+              </div>
+
+              <!-- Password -->
+              <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input class="form-control"
+                       type="password"
+                       name="registerPassword"
+                       [(ngModel)]="registerPassword"
+                       required
+                       minlength="6"
+                       #pw="ngModel">
+                <small class="text-danger" *ngIf="pw.invalid && pw.touched">
+                  Minimum 6 characters
+                </small>
+              </div>
+
+              <!-- Confirm Password -->
+              <div class="mb-3">
+                <label class="form-label">Re-Type Password</label>
+                <input class="form-control"
+                       type="password"
+                       name="registerRePassword"
+                       [(ngModel)]="registerRePassword"
+                       required>
+                <small class="text-danger"
+                       *ngIf="registerPassword !== registerRePassword && registerRePassword">
+                  Passwords do not match
+                </small>
+              </div>
+
+              <!-- OTP -->
+              <div class="mb-4">
+                <label class="form-label">OTP</label>
+                <input class="form-control"
+                       type="text"
+                       name="otp"
+                       [(ngModel)]="otp"
+                       required>
+              </div>
+
+              <!-- ACTIONS -->
+              <div class="d-flex justify-content-between align-items-center">
+                <a class="back-link" (click)="backToLogin()">Back to Login</a>
+                <button class="btn btn-primary"
+                        type="submit"
+                        [disabled]="registerForm.invalid || registerPassword !== registerRePassword">
+                  Create
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

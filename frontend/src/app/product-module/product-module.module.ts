@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { ProductModuleRoutingModule } from './product-module-routing.module';
 import { ProductComponent } from './product/product.component';
+import { CartComponent } from './cart/cart.component';
 
-import { CartComponent } from '../Pages/cart/cart.component';
+
 
 
 @NgModule({

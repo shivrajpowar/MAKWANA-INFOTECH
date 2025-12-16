@@ -1,16 +1,25 @@
-/* nav */
+/* ================= NAV BAR ================= */
 .nav-bar {
   background: #6f1331;
-  padding: 10px;
+  padding: 10px 20px;
   border-radius: 6px;
+
+  /* 👇 EXTRA SPACE FROM HEADER (optional but nice) */
+  margin-top: 4px;
   margin-bottom: 20px;
 }
+
 .nav-bar a {
-  color: white;
+  color: #ffffff;
   margin-right: 18px;
   text-decoration: none;
   font-weight: 600;
 }
+
+.nav-bar a:hover {
+
+}
+
 
 
 .comparison-container {
@@ -136,24 +145,34 @@
   }
 
   /* Mobile menu */
-  .mobile-links {
-    display: flex;
-    position: fixed;
-    top: 0;
-    right: -250px; /* hidden offscreen */
-    width: 250px;
-    height: 100vh;
-    background: #444;
-    flex-direction: column;
-    padding: 60px 20px;
-    gap: 20px;
-    transition: right 0.3s ease;
-    z-index: 1001;
-  }
+ /* ================= MOBILE SLIDE MENU (FIXED) ================= */
+.mobile-links {
+  display: flex;
+  position: fixed;
+  top: 0;
+  right: -250px;
+  width: 250px;
+  height: 100vh;
+  background: #444;
 
-  .mobile-links.open {
-    right: 0; /* slide in */
-  }
+  flex-direction: column;
+  gap: 20px;
+
+  padding: 20px;              /* reduced padding */
+  padding-top: 60px;          /* space for close button */
+
+  /* ✅ FIX: ENABLE SCROLLING */
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  transition: right 0.3s ease;
+  z-index: 1001;
+}
+
+.mobile-links.open {
+  right: 0;
+}
+
 
   .mobile-links a {
     color: white;

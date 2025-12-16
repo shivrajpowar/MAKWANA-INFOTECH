@@ -1,0 +1,100 @@
+<div class="container-fluid busy-container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+
+        <div class="card login-card shadow-lg">
+
+          <!-- HEADER -->
+          <div class="login-header text-center">
+            Welcome to Busy
+          </div>
+
+          <div class="card-body p-4">
+
+            <!-- USER TYPE -->
+            <div class="mb-3">
+              <label class="form-label">User Type</label>
+              <select
+                class="form-select"
+                name="loginUserType"
+                [(ngModel)]="loginUserType"
+                required
+                #ut="ngModel">
+                <option value="" disabled>Select User Type</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+                <option value="subuser">Sub User</option>
+              </select>
+
+              <small class="text-danger" *ngIf="ut.invalid && ut.touched">
+                User Type is required
+              </small>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+              <label class="form-label">Email ID</label>
+              <input
+                type="email"
+                class="form-control"
+                name="loginEmail"
+                [(ngModel)]="loginEmail"
+                required
+                email
+                #le="ngModel">
+
+              <small class="text-danger" *ngIf="le.errors?.['required'] && le.touched">
+                Email is required
+              </small>
+              <small class="text-danger" *ngIf="le.errors?.['email'] && le.touched">
+                Enter valid email
+              </small>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="mb-4">
+              <label class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                name="loginPassword"
+                [(ngModel)]="loginPassword"
+                required
+                minlength="6"
+                #lp="ngModel">
+
+              <small class="text-danger" *ngIf="lp.errors?.['required'] && lp.touched">
+                Password is required
+              </small>
+              <small class="text-danger" *ngIf="lp.errors?.['minlength'] && lp.touched">
+                Minimum 6 characters required
+              </small>
+            </div>
+
+            <!-- ACTION -->
+            <div class="d-grid mb-3">
+              <button
+                class="btn btn-primary btn-lg"
+                type="submit"
+                [disabled]="loginForm.invalid">
+                Login
+              </button>
+            </div>
+
+            <!-- REGISTER LINK -->
+            <div class="text-center">
+              <a class="register-link" (click)="openRegister()">
+                First Time? Register
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
