@@ -4,38 +4,35 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
-declare var bootstrap: any; // Required for Bootstrap 5 modal
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-cart',
-    standalone: true, 
-  imports: [CommonModule, FormsModule,],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.css']  // ✅ Corrected
+  styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
-  cartItems: any[] = [];
-  total: number = 0;
 
-  // Modal related
+  cartItems: any[] = [];
+  total = 0;
+
   itemToRemove: any = null;
   modalInstance: any;
-   
 
- constructor(
-  private cartService: CartService,
-  private router: Router   // ✅ ADD THIS
-) {}
-
+  constructor(
+    private cartService: CartService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.cartItems = this.cartService.getCartItems();
     this.updateTotal();
 
-    // Initialize Bootstrap modal
     const modalEl = document.getElementById('removeModal');
     if (modalEl) {
-      this.modalInstance = new bootstrap.Modal(modalEl, { keyboard: false });
+      this.modalInstance = new bootstrap.Modal(modalEl);
     }
   }
 
@@ -51,22 +48,15 @@ export class CartComponent implements OnInit {
     }
   }
 
-  removeItem(index: number) {
-    this.cartService.removeItem(index);
-    this.updateTotal();
-  }
-
   updateTotal() {
     this.total = this.cartService.getTotal();
   }
 
-  // Open modal for remove confirmation
   openRemoveModal(index: number) {
     this.itemToRemove = this.cartItems[index];
     this.modalInstance.show();
   }
 
-  // Confirm remove from modal
   confirmRemove() {
     const index = this.cartItems.indexOf(this.itemToRemove);
     if (index > -1) {
@@ -75,8 +65,20 @@ export class CartComponent implements OnInit {
     }
     this.modalInstance.hide();
   }
-  goToPlaceOrder() {
-  this.router.navigate(['/products/place-order']);
-}
 
+  // ✅ PLACE ORDER LOGIC (LOGIN CHECK)
+  goToPlaceOrder() {
+    const user = localStorage.getItem('user');
+
+    if (user) {
+      // User logged in → go directly
+      this.router.navigate(['/products/checkout']);
+    } else {
+      // User not logged in → show login first
+      this.router.navigate(
+        ['/products/checkout'],
+        { queryParams: { login: true } }
+      );
+    }
+  }
 }

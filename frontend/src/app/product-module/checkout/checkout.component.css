@@ -1,0 +1,111 @@
+.checkout-wrapper {
+  background: #f1f3f6;
+  min-height: 100vh;
+}
+
+.checkout-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px 40px;
+}
+
+.left-section {
+  flex: 3;
+}
+
+.right-section {
+  flex: 1;
+}
+
+.checkout-card {
+  margin-bottom: 15px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.card-header {
+  background: #fff;
+  padding: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.active-header {
+  background: #2874f0;
+  color: #fff;
+}
+
+.step {
+  background: #e0e0e0;
+  color: #2874f0;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.active-header .step {
+  background: #fff;
+}
+
+.login-body {
+  display: flex;
+  gap: 30px;
+}
+
+.login-left {
+  flex: 1;
+}
+
+.login-right {
+  flex: 1;
+  font-size: 14px;
+}
+
+.login-right ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+.login-right li {
+  margin-bottom: 10px;
+}
+
+.terms {
+  font-size: 12px;
+  color: #666;
+}
+
+.terms a {
+  color: #2874f0;
+  text-decoration: none;
+}
+
+.secure-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.shield {
+  font-size: 30px;
+}
+
+.checkout-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 40px;
+  font-size: 13px;
+  background: #f1f3f6;
+  border-top: 1px solid #ddd;
+}
+
+.checkout-footer a {
+  color: #2874f0;
+  text-decoration: none;
+  margin: 0 3px;
+}

@@ -8,12 +8,15 @@ import { CartComponent } from './cart/cart.component';
 
 
 
+import { CheckoutComponent } from './checkout/checkout.component';
+
+
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     ProductModuleRoutingModule,
-    ProductComponent,ProductComponent,CartComponent
+    ProductComponent,ProductComponent,CartComponent,CheckoutComponent
   ]
 })
 export class ProductModuleModule { }
