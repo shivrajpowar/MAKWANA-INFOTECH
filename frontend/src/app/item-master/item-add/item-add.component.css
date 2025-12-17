@@ -1,0 +1,112 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5fafd;
+  padding: 20px;
+}
+
+/* Main Heading */
+h2 {
+  text-align: center;
+  color: #ffffff; /* White text */
+  font-size: 26px;
+  font-weight: 700;
+  padding: 14px 20px; /* top/bottom and left/right padding */
+  border-radius: 10px; /* rounded corners */
+  background: linear-gradient(90deg, #4b1d3f, #b91c1c); /* dark to red gradient */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* subtle shadow */
+  margin-bottom: 20px; /* space below header */
+}
+
+form {
+  max-width: 900px;
+  margin: auto;
+  background: #fff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+form:hover {
+  transform: translateY(-3px);
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #03a9f4;
+  box-shadow: 0 0 5px rgba(3, 169, 244, 0.4);
+  outline: none;
+}
+
+textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+.buttons {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.buttons button {
+  padding: 12px 30px;
+  margin: 5px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.buttons .save {
+  background-color: #03a9f4;
+}
+
+.buttons .save:hover {
+  background-color: #0288d1;
+  transform: translateY(-2px);
+}
+
+.buttons .quit {
+  background-color: #f44336;
+}
+
+.buttons .quit:hover {
+  background-color: #d32f2f;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,158 @@
+
+<div class="account-conatiner mt-5">
+  <div>
+    <h2>Account Master</h2>
+    <form [formGroup]="accountForm" (ngSubmit)="submit()">
+
+    <h3 class="mb-3 mt-4 border-bottom pb-2 text-primary">Account Details</h3>
+
+    <div class="row">
+        <div class="field">
+            <label>Name</label>
+            <input formControlName="name">
+        </div>
+
+        <div class="field">
+            <label>Alias</label>
+            <input formControlName="alias">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="field">
+            <label>Print Name</label>
+            <input formControlName="printName">
+        </div>
+
+        <div class="field">
+            <label>Parent Group</label>
+            <select formControlName="parentGroup">
+                <option>Sundry Debtors</option>
+                <option>Sundry Creditors</option>
+            </select>
+        </div>
+    </div>
+
+    <label class="checkbox">
+        <input type="checkbox" formControlName="billByBillBalancing">
+        Bill By Bill Balancing
+    </label>
+
+    <hr>
+
+    <h3 class="mb-3 mt-4 border-bottom pb-2 text-primary">Address Details</h3>
+
+    <div formGroupName="address">
+
+        <div class="row">
+            <div class="field">
+                <label>Address 1</label>
+                <input formControlName="address1">
+            </div>
+
+            <div class="field">
+                <label>Address 2</label>
+                <input formControlName="address2">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>Mobile</label>
+                <input formControlName="mobile">
+            </div>
+
+            <div class="field">
+                <label>WhatsApp</label>
+                <input formControlName="whatsappNo">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>PAN</label>
+                <input formControlName="itpan">
+            </div>
+
+            <div class="field">
+                <label>GST No</label>
+                <input formControlName="gstNo">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>Country</label>
+                <input formControlName="countryName">
+            </div>
+
+            <div class="field">
+                <label>State</label>
+                <input formControlName="stateName">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>Area</label>
+                <input formControlName="areaName">
+            </div>
+
+            <div class="field">
+                <label>Account No</label>
+                <input formControlName="accNo">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>Bank</label>
+                <input formControlName="bankName">
+            </div>
+
+            <div class="field">
+                <label>IFSC</label>
+                <input formControlName="ifsc">
+            </div>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <h3 class="mb-3 mt-4 border-bottom pb-2 text-primary">Tax & Other Info</h3>
+
+    <div class="row">
+        <div class="field">
+            <label>Tax Type</label>
+            <select formControlName="taxType">
+                <option>Others</option>
+                <option>GST</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Dealer Type</label>
+            <select formControlName="typeOfDealerGST">
+                <option>Registered</option>
+                <option>Unregistered</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="field">
+            <label>Cheque Print Name</label>
+            <input formControlName="chequePrintName">
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-md">
+  💾 Save Account
+</button>
+
+</form>
+</div>  
+</div>
+
+

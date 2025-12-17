@@ -1,83 +1,151 @@
 <nav class="navbar navbar-expand-lg custom-navbar px-3 py-2">
 
-  <!-- BRAND -->
-  <!-- <a class="navbar-brand text-white fw-bold me-3" routerLink="/">Busy App</a> -->
+    <!-- HAMBURGER -->
+    <button class="navbar-toggler text-white" type="button" (click)="menuOpen = !menuOpen">
+        ☰
+    </button>
 
-  <!-- HAMBURGER -->
-  <button class="navbar-toggler text-white" type="button" (click)="menuOpen = !menuOpen">
-    ☰
-  </button>
+    <!-- NAV CONTENT -->
+    <div class="collapse navbar-collapse" [class.show]="menuOpen">
 
-  <!-- NAV LINKS -->
-  <div class="collapse navbar-collapse" [class.show]="menuOpen">
+        <!-- LEFT MENU -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-3">
 
-    <!-- LEFT LINKS -->
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-3">
-      <li class="nav-item">
-        <a class="nav-link text-white" routerLink="/company" (click)="menuOpen = false">Company</a>
-      </li>
-      <li class="nav-item dropdown">
-        <!-- ADMINISTRATION -->
-        <a class="nav-link dropdown-toggle text-white" href="#" role="button" (click)="toggleAdminDropdown($event)">
-          Administration
-        </a>
-        <!-- DROPDOWN MENU -->
-        <ul class="dropdown-menu" [class.show]="adminDropdownOpen">
-          <!-- ACCOUNT MASTER -->
-          <li>
-            <a class="dropdown-item" routerLink="/administration/account-master" (click)="closeMenu()">
-              Account Master
-            </a>
-          </li>
-          <!-- ITEM MASTER -->
-          <li>
-            <a class="dropdown-item" routerLink="/administration/item-master" (click)="closeMenu()">
-              Item Master
-            </a>
-          </li>
+            <!-- Company -->
+            <li class="nav-item">
+                <a class="nav-link text-white" routerLink="/busypage/company" (click)="closeMenu()">
+                    Company
+                </a>
+            </li>
+
+            <!-- ================= ADMINISTRATION ================= -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" (click)="toggleAdmin($event)">
+                    Administration
+                </a>
+
+                <ul class="dropdown-menu show" *ngIf="adminOpen">
+
+                    <!-- Account Master -->
+                    <li class="dropdown-header fw-bold" style="cursor:pointer" (click)="toggleAccount($event)">
+                        Account Master
+                    </li>
+
+                    <li *ngIf="accountOpen">
+                        <a class="dropdown-item" routerLink="/busypage/accountMaster/Acc-add" (click)="closeAll()">Add</a>
+                    </li>
+                    <li *ngIf="accountOpen">
+                        <a class="dropdown-item" routerLink="/busypage/accountMaster/Acc-modify" (click)="closeAll()">Modify</a>
+                    </li>
+                    <li *ngIf="accountOpen">
+                        <a class="dropdown-item" routerLink="/busypage/accountMaster/Acc-list" (click)="closeAll()">List</a>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <!-- Item Master -->
+                    <li class="dropdown-header fw-bold" style="cursor:pointer" (click)="toggleItem($event)">
+                        Item Master
+                    </li>
+
+                    <li *ngIf="itemOpen">
+                        <a class="dropdown-item" routerLink="/busypage/itemMaster/Item-add" (click)="closeAll()">Add</a>
+                    </li>
+                    <li *ngIf="itemOpen">
+                        <a class="dropdown-item" routerLink="/busypage/itemMaster/Item-modify" (click)="closeAll()">Modify</a>
+                    </li>
+                    <li *ngIf="itemOpen">
+                        <a class="dropdown-item" routerLink="/busypage/itemMaster/Item-list" (click)="closeAll()">List</a>
+                    </li>
+
+                </ul>
+            </li>
+
+            <!-- ================= TRANSACTIONS ================= -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" (click)="toggleTransaction($event)">
+                    Transactions
+                </a>
+
+                <ul class="dropdown-menu show" *ngIf="transactionOpen">
+
+                    <!-- Sales Order -->
+                    <li class="dropdown-header fw-bold" style="cursor:pointer" (click)="toggleSalesOrder($event)">
+                        Sales Order
+                    </li>
+
+                    <li *ngIf="salesOrderOpen">
+                        <a class="dropdown-item" routerLink="/busypage/salesOrder/salesOrder-add" (click)="closeAll()">Add</a>
+                    </li>
+                    <li *ngIf="salesOrderOpen">
+                        <a class="dropdown-item" routerLink="/busypage/salesOrder/salesOrder-modify"
+                            (click)="closeAll()">Modify</a>
+                    </li>
+                    <li *ngIf="salesOrderOpen">
+                        <a class="dropdown-item" routerLink="/busypage/salesOrder/salesOrder-list"
+                            (click)="closeAll()">List</a>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <!-- Sales -->
+                    <li class="dropdown-header fw-bold" style="cursor:pointer" (click)="toggleSales($event)">
+                        Sales
+                    </li>
+
+                    <li *ngIf="salesOpen">
+                        <a class="dropdown-item" routerLink="/busypage/sales/sales-add" (click)="closeAll()">Add</a>
+                    </li>
+                    <li *ngIf="salesOpen">
+                        <a class="dropdown-item" routerLink="/busypage/sales/sales-modify" (click)="closeAll()">Modify</a>
+                    </li>
+                    <li *ngIf="salesOpen">
+                        <a class="dropdown-item" routerLink="/busypage/sales/sales-list" (click)="closeAll()">List</a>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <!-- Receipt -->
+                    <li class="dropdown-header fw-bold" style="cursor:pointer" (click)="toggleReceipt($event)">
+                        Receipt
+                    </li>
+
+                    <li *ngIf="receiptOpen">
+                        <a class="dropdown-item" routerLink="/busypage/receipt/receipt-add" (click)="closeAll()">Add</a>
+                    </li>
+                    <li *ngIf="receiptOpen">
+                        <a class="dropdown-item" routerLink="/busypage/receipt/receipt-modify"
+                            (click)="closeAll()">Modify</a>
+                    </li>
+                    <li *ngIf="receiptOpen">
+                        <a class="dropdown-item" routerLink="/busypage/receipt/receipt-list" (click)="closeAll()">List</a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Display -->
+            <li class="nav-item">
+                <a class="nav-link text-white" routerLink="/busypage/display" (click)="closeMenu()">
+                    Display
+                </a>
+            </li>
 
         </ul>
-      </li>
-    
-     <li class="nav-item dropdown">
-        <!-- TRANSACTIONS -->
-        <a class="nav-link dropdown-toggle text-white" href="#" role="button" (click)="toggleTransactionsDropdown($event)">
-          Transactions
-        </a>
-        <!-- DROPDOWN MENU -->
-        <ul class="dropdown-menu" [class.show]="transactionsDropdownOpen">
-          <!-- SALES ORDER -->
-          <li>
-            <a class="dropdown-item" routerLink="/transaction/sales-order" (click)="closeMenu()">
-              Sales Order
-            </a>
-          </li>
-          <!-- SALES -->
-          <li>
-            <a class="dropdown-item" routerLink="/transaction/sales" (click)="closeMenu()">
-              Sales
-            </a>
-          </li>
-          <!-- RECEIPT -->
-          <li>
-            <a class="dropdown-item" routerLink="/transaction/receipt" (click)="closeMenu()">
-              Receipt
-            </a>
-          </li>
 
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-white" routerLink="/display" (click)="menuOpen = false">Display</a>
-      </li>
-    </ul>
+        <!-- RIGHT -->
+        <div class="d-flex">
+            <button *ngIf="isLoggedIn" class="btn btn-outline-light" (click)="logout()">
+                Logout
+            </button>
+        </div>
 
-    <!-- RIGHT LOGOUT -->
-    <div class="d-flex">
-      <button *ngIf="isLoggedIn" class="btn btn-outline-light" (click)="logout()">
-        Logout
-      </button>
     </div>
-
-  </div>
 </nav>
+
+<router-outlet></router-outlet>

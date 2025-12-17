@@ -1,57 +1,118 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterEvent, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-busypage',
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, RouterOutlet],
   templateUrl: './busypage.component.html',
   styleUrls: ['./busypage.component.css']
 })
 export class BusypageComponent {
-isLoggedIn = true;
-menuOpen = false;
 
-adminDropdownOpen = false;
-transactionsDropdownOpen = false;
-constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
-toggleAdminDropdown(event: Event) {
-  event.preventDefault();
+  // LOGIN FLAG
+  isLoggedIn = true;
 
-  // close other dropdown
-  this.transactionsDropdownOpen = false;
+  // MAIN MENU STATES
+  menuOpen = false;
+  adminOpen = false;
+  transactionOpen = false;
 
-  this.adminDropdownOpen = !this.adminDropdownOpen;
-}
+  // ADMIN
+  accountOpen = false;
+  itemOpen = false;
 
-toggleTransactionsDropdown(event: Event) {
-  event.preventDefault();
+  // TRANSACTIONS
+  salesOrderOpen = false;
+  salesOpen = false;
+  receiptOpen = false;
 
-  // close other dropdown
-  this.adminDropdownOpen = false;
+  /* ================= ADMIN ================= */
 
-  this.transactionsDropdownOpen = !this.transactionsDropdownOpen;
-}
+  toggleAdmin(event: Event) {
+    event.preventDefault();
+    this.adminOpen = !this.adminOpen;
 
-closeMenu() {
-  this.adminDropdownOpen = false;
-  this.transactionsDropdownOpen = false;
-  this.menuOpen = false;
-}
+    // close others
+    this.transactionOpen = false;
+    this.accountOpen = false;
+    this.itemOpen = false;
+  }
 
+  toggleAccount(event: Event) {
+    event.stopPropagation();
+    this.accountOpen = !this.accountOpen;
+    this.itemOpen = false;
+  }
 
-// LOGOUT
+  toggleItem(event: Event) {
+    event.stopPropagation();
+    this.itemOpen = !this.itemOpen;
+    this.accountOpen = false;
+  }
+
+  /* ================= TRANSACTIONS ================= */
+
+  toggleTransaction(event: Event) {
+    event.preventDefault();
+    this.transactionOpen = !this.transactionOpen;
+
+    // close others
+    this.adminOpen = false;
+    this.resetTransactionChildren();
+  }
+
+  toggleSalesOrder(event: Event) {
+    event.stopPropagation();
+    this.salesOrderOpen = !this.salesOrderOpen;
+    this.salesOpen = false;
+    this.receiptOpen = false;
+  }
+
+  toggleSales(event: Event) {
+    event.stopPropagation();
+    this.salesOpen = !this.salesOpen;
+    this.salesOrderOpen = false;
+    this.receiptOpen = false;
+  }
+
+  toggleReceipt(event: Event) {
+    event.stopPropagation();
+    this.receiptOpen = !this.receiptOpen;
+    this.salesOrderOpen = false;
+    this.salesOpen = false;
+  }
+
+  /* ================= COMMON ================= */
+
+  closeMenu() {
+    this.menuOpen = false;
+  }
+
+  closeAll() {
+    this.menuOpen = false;
+    this.adminOpen = false;
+    this.transactionOpen = false;
+
+    this.accountOpen = false;
+    this.itemOpen = false;
+
+    this.resetTransactionChildren();
+  }
+
+  resetTransactionChildren() {
+    this.salesOrderOpen = false;
+    this.salesOpen = false;
+    this.receiptOpen = false;
+  }
+
+  // LOGOUT
   logout(): void {
     this.isLoggedIn = false;
     this.router.navigate(['/']);
   }
 }
-
-
-
-
- 
-  

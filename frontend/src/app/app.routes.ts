@@ -11,33 +11,68 @@ import { CompanyComponent } from './pages/company/company.component';
 
 
 export const routes: Routes = [
-   {
-      path: "", component: HomeComponent
-   },
- 
+   { path: "", component: HomeComponent },
    { path: 'login', component: LoginComponent },
-   // { path: '', redirectTo: 'busy-login', pathMatch: 'full' },
    { path: 'busy-login', component: BusyLoginComponent },
    { path: 'busy-register', component: BusyRegisterComponent },
-   { path: 'busypage', component: BusypageComponent },
-   { path:"company",component:CompanyComponent},
-   { path: "products",
+
+   { path: "company", component: CompanyComponent },
+   {
+      path: "products",
       loadChildren: () => import('./product-module/product-module.module').then(m => m.ProductModuleModule)
    },
-   {
-      path: "administration",
-      loadChildren:() =>import('./administrationModule/administration.module').then(m=>m.AdministrationModule)
    
-   },
+
    {
-      path:"transaction",
-      loadChildren:() =>import('./transactionsModule/transactions.module').then(m=>m.TransactionsModule)
+      path: 'busypage',
+      component: BusypageComponent,
+      children: [
+          // default page after login
+         { path: '', redirectTo: 'company', pathMatch: 'full' },
+         { path: 'company', component: CompanyComponent },
+
+         {
+            path: 'accountMaster',
+            loadChildren: () =>
+               import('./account-master-module/account-master-module.module')
+                  .then(m => m.AccountMasterModuleModule)
+         },
+
+         {
+            path: 'itemMaster',
+            loadChildren: () =>
+               import('./item-master/item-master.module')
+                  .then(m => m.ItemMasterModule)
+         },
+
+         {
+            path: 'salesOrder',
+            loadChildren: () =>
+               import('./sales-order/sales-order.module')
+                  .then(m => m.SalesOrderModule)
+         },
+
+         {
+            path: 'sales',
+            loadChildren: () =>
+               import('./sales/sales.module')
+                  .then(m => m.SalesModule)
+         },
+
+         {
+            path: 'receipt',
+            loadChildren: () =>
+               import('./receipt-module/receipt-module.module')
+                  .then(m => m.ReceiptModuleModule)
+         },
+
+        
+      ]
    }
 
 
 
 
 
-  
 
 ];

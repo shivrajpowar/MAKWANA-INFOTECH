@@ -1,0 +1,45 @@
+ body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7fb;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: auto;
+    }
+
+    h2 {
+        text-align: center;
+        color: #800040;
+        margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #800040;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #800040;
+        color: #800040;
+    }
+
+    th {
+        background-color: #c04070;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f1d9e3;
+    }
