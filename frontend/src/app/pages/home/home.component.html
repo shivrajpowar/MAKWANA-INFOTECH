@@ -1,8 +1,7 @@
-
-
 <nav class="nav-bar">
   <div class="nav-container">
-    <!-- Desktop links (left side) -->
+
+    <!-- Desktop links -->
     <div class="nav-links desktop-links">
       <a routerLink="">Home</a>
       <a routerLink="products">Products</a>
@@ -13,30 +12,62 @@
       <a routerLink="">About Us</a>
     </div>
 
-    <!-- Hamburger icon (mobile) right -->
+
+
+
+
+
+
+
+    <!-- Hamburger -->
     <span class="hamburger" (click)="toggleMenu()">☰</span>
 
-    <!-- Mobile slide menu -->
+    <!-- Mobile menu -->
     <div class="nav-links mobile-links" [class.open]="isMenuOpen">
       <span class="close-btn" (click)="closeMenu()">×</span>
       <a routerLink="" (click)="closeMenu()">Home</a>
       <a routerLink="products" (click)="closeMenu()">Products</a>
-      <a routerLink="/busy" (click)="closeMenu()">Busy On Mobile App</a>
+      <a routerLink="busy-login" (click)="closeMenu()">Busy On Mobile App</a>
       <a routerLink="" (click)="closeMenu()">Download</a>
       <a routerLink="" (click)="closeMenu()">Utility</a>
       <a routerLink="" (click)="closeMenu()">Support</a>
       <a routerLink="" (click)="closeMenu()">About Us</a>
     </div>
 
-    <!-- Overlay for mobile menu -->
+    <!-- Overlay -->
     <div class="overlay" *ngIf="isMenuOpen" (click)="closeMenu()"></div>
+
   </div>
 </nav>
 
 
+<div id="mainSlider" class="carousel slide mb-4" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="assets/slider_1200x350.png" class="d-block w-100 slider-img">
+    </div>
+    <div class="carousel-item">
+      <img src="assets/slider_busy_1_1200x350.png" class="d-block w-100 slider-img">
+    </div>
+    <div class="carousel-item">
+      <img src="assets/slider_busy_2_1200x350 (1).png" class="d-block w-100 slider-img">
+    </div>
+  </div>
+
+  <button class="carousel-control-prev" data-bs-target="#mainSlider" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+
+  <button class="carousel-control-next" data-bs-target="#mainSlider" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
 
 
 
+
+
+<!-- ================== PRODUCT COMPARISON ================== -->
 
 <div class="comparison-container">
   <h2 class="title">Busy Comparison Chart</h2>
@@ -47,7 +78,11 @@
     <div class="edition-card">
       <h3 class="edition-title">BASIC EDITION</h3>
 
-      <img src="assets/BusyBox (1).svg" alt="Busy Basic Edition" class="edition-img" />
+      <img
+        src="assets/BusyBox (1).svg"
+        alt="Busy Basic Edition"
+        class="edition-img"
+      />
 
       <div class="price-box">
         <div class="row">
@@ -60,14 +95,21 @@
         </div>
       </div>
 
-      <button class="buy-btn">Buy Now</button>
+      <!-- ✅ BUY NOW WORKING -->
+      <button class="buy-btn" [routerLink]="['/product', 1]">
+        Buy Now
+      </button>
     </div>
 
     <!-- STANDARD EDITION -->
     <div class="edition-card">
       <h3 class="edition-title">STANDARD EDITION</h3>
 
-      <img src="assets/BusyBox (1).svg" alt="Busy Standard Edition" class="edition-img" />
+      <img
+        src="assets/BusyBox (1).svg"
+        alt="Busy Standard Edition"
+        class="edition-img"
+      />
 
       <div class="price-box">
         <div class="row">
@@ -80,14 +122,21 @@
         </div>
       </div>
 
-      <button class="buy-btn">Buy Now</button>
+      <!-- ✅ BUY NOW WORKING -->
+      <button class="buy-btn" (click)="goToProduct()">
+        Buy Now
+      </button>
     </div>
 
     <!-- ENTERPRISE EDITION -->
     <div class="edition-card">
       <h3 class="edition-title">ENTERPRISE EDITION</h3>
 
-      <img src="assets/BusyBox (1).svg" alt="Busy Enterprise Edition" class="edition-img" />
+      <img
+        src="assets/BusyBox (1).svg"
+        alt="Busy Enterprise Edition"
+        class="edition-img"
+      />
 
       <div class="price-box">
         <div class="row">
@@ -100,67 +149,11 @@
         </div>
       </div>
 
-      <button class="buy-btn">Buy Now</button>
+      <!-- ✅ BUY NOW WORKING -->
+      <button class="buy-btn" [routerLink]="['/product', 3]">
+        Buy Now
+      </button>
     </div>
 
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
