@@ -9,7 +9,7 @@
 /* LOGIN BUTTON */
 .login-btn {
   padding: 8px 18px;
-  background: #ffffff;
+  /* background: #ffffff; */
    background: transparent;
   color: white;
   border: 1.5px solid #e5e7eb;
@@ -21,10 +21,10 @@
   transition: all 0.25s ease;
 }
 
-.login-btn:hover {
+/* .login-btn:hover {
   background: #f9fafb;
   border-color: #8d153f;
-}
+} */
 
 /* USER INFO */
 .user-info {
@@ -35,14 +35,14 @@
 
 .user-name {
   font-weight: 600;
-  color: #ffc107;
+  color: white;
 }
 
 /* LOGOUT BUTTON */
 .logout-btn {
   background: transparent;
   border: none;
-  color: #ffc107;
+  color: white;
   font-weight: 600;
   cursor: pointer;
 }
