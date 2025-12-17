@@ -1,229 +1,120 @@
-<div class="checkout-wrapper">
+<div class="checkout-container">
 
-  <!-- MAIN CONTENT -->
-  <div class="checkout-container">
+  <div class="checkout-page d-flex">
 
-    <!-- LEFT SECTION -->
-    <div class="left-section">
+    <!-- LEFT -->
+    <div class="checkout-wrapper">
 
-      <!-- LOGIN CARD -->
+      <!-- LOGIN -->
       <div class="card checkout-card active">
-        <div class="card-header active-header">
-          <span class="step">1</span>
-          LOGIN OR SIGNUP
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
+        <div class="card-header step-header active">
+          <span class="step">1</span> LOGIN OR SIGNUP
         </div>
 
-        <div class="card-body login-body">
-          <div class="login-left">
-            <input
-              class="form-control mb-3"
-              placeholder="Enter Email / Mobile number"
-              [(ngModel)]="emailOrMobile">
+        <div class="card-body" *ngIf="currentStep === 1">
+          <input class="form-control"
+                 placeholder="Enter Email / Mobile number"
+                 [(ngModel)]="emailOrMobile">
 
-            <input
-              type="password"
-              class="form-control mb-3"
-              placeholder="Enter Password"
-              [(ngModel)]="password">
+          <input class="form-control"
+                 type="password"
+                 placeholder="Enter Password"
+                 [(ngModel)]="password">
 
-            <p class="terms">
-              By continuing, you agree to our
-              <a href="#">Terms of Use</a> and
-              <a href="#">Privacy Policy</a>
-            </p>
+          <p class="small text-muted mt-2">
+            By continuing, you agree to our
+            <a href="#">Terms</a> & <a href="#">Privacy</a>
+          </p>
 
-            <button class="btn btn-warning w-50" (click)="login()">
-              CONTINUE
-            </button>
-          </div>
-
-          <div class="login-right">
-            <h6>Advantages of our secure login</h6>
-            <ul>
-              <li>🚚 Easily Track Orders, Hassle-free Returns</li>
-              <li>🔔 Get Relevant Alerts & Recommendations</li>
-              <li>⭐ Wishlist, Reviews, Ratings & more</li>
-            </ul>
-          </div>
+          <button class="btn btn-warning w-100 mt-2"
+                  (click)="login()">
+            CONTINUE
+          </button>
         </div>
       </div>
 
       <!-- DELIVERY ADDRESS -->
-      <div class="card checkout-card">
-        <div class="card-header">
-          <span class="step">2</span>
-          DELIVERY ADDRESS
+      <div class="card checkout-card"
+           [class.disabled]="currentStep < 2">
+        <div class="card-header step-header">
+          <span class="step">2</span> DELIVERY ADDRESS
+        </div>
+
+        <div class="card-body" *ngIf="currentStep === 2">
+          <input class="form-control" placeholder="Name" [(ngModel)]="address.name">
+          <input class="form-control" placeholder="Mobile" [(ngModel)]="address.mobile">
+          <input class="form-control" placeholder="Address" [(ngModel)]="address.address">
+          <input class="form-control" placeholder="City" [(ngModel)]="address.city">
+          <input class="form-control" placeholder="Pincode" [(ngModel)]="address.pincode">
+
+          <button class="btn btn-warning w-100 mt-2"
+                  (click)="saveAddress()">
+            SAVE & CONTINUE
+          </button>
         </div>
       </div>
 
       <!-- ORDER SUMMARY -->
-      <div class="card checkout-card">
-        <div class="card-header">
-          <span class="step">3</span>
-          ORDER SUMMARY
+      <div class="card checkout-card"
+           [class.disabled]="currentStep < 3">
+        <div class="card-header step-header">
+          <span class="step">3</span> ORDER SUMMARY
+        </div>
+
+        <div class="card-body" *ngIf="currentStep === 3">
+          <p>Product A – ₹1000</p>
+          <p>Product B – ₹500</p>
+          <hr>
+          <strong>Total ₹1500</strong>
+
+          <button class="btn btn-warning w-100 mt-2"
+                  (click)="confirmSummary()">
+            CONTINUE
+          </button>
         </div>
       </div>
 
-      <!-- PAYMENT OPTIONS -->
-      <div class="card checkout-card">
-        <div class="card-header">
-          <span class="step">4</span>
-          PAYMENT OPTIONS
+      <!-- PAYMENT -->
+      <div class="card checkout-card"
+           [class.disabled]="currentStep < 4">
+        <div class="card-header step-header">
+          <span class="step">4</span> PAYMENT OPTIONS
         </div>
+
+        <div class="card-body" *ngIf="currentStep === 4">
+          <label><input type="radio" value="UPI" [(ngModel)]="selectedPayment"> UPI</label><br>
+          <label><input type="radio" value="CARD" [(ngModel)]="selectedPayment"> Card</label><br>
+          <label><input type="radio" value="COD" [(ngModel)]="selectedPayment"> Cash on Delivery</label>
+
+          <button class="btn btn-success w-100 mt-3"
+                  (click)="placeOrder()">
+            PLACE ORDER
+          </button>
+        </div>
+      </div>
+
+      <div class="alert alert-success mt-3"
+           *ngIf="currentStep === 5">
+        🎉 Order placed successfully!
       </div>
 
     </div>
 
-    <!-- RIGHT SECTION -->
-    <div class="right-section">
-      <div class="secure-box">
-        <span class="shield">🛡️</span>
-        <p>
-          <strong>Safe and Secure Payments</strong><br>
-          Easy returns. 100% Authentic products.
-        </p>
+    <!-- RIGHT -->
+    <div class="checkout-right">
+      <div class="info-card">
+        <h6>Secure Login Benefits</h6>
+        <p>🚚 Track orders easily</p>
+        <p>🔔 Alerts & offers</p>
+        <p>⭐ Reviews & wishlist</p>
+      </div>
+
+      <div class="info-card">
+        <h6>🛡 Safe Payments</h6>
+        <p>100% authentic products</p>
       </div>
     </div>
 
   </div>
-
-  <!-- FOOTER -->
-  <footer class="checkout-footer">
-    <div>
-      Policies:
-      <a href="#">Returns Policy</a> |
-      <a href="#">Terms of Use</a> |
-      <a href="#">Security</a> |
-      <a href="#">Privacy</a>
-    </div>
-
-    <div>
-      © 2007-2025 YourStore.com
-    </div>
-
-    <div>
-      Need help?
-      <a href="#">Help Center</a> |
-      <a href="#">Contact Us</a>
-    </div>
-  </footer>
 
 </div>

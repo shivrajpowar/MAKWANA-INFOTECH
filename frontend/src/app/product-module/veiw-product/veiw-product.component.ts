@@ -12,8 +12,11 @@ import { CartService } from '../../services/cart.service';
   styleUrl: './veiw-product.component.css'
 })
 export class VeiwProductComponent implements OnInit {
+changeImage(_t12: string) {
+throw new Error('Method not implemented.');
+}
 
-  productId: number | null = null;
+  productId!: number;
   productTitle = '';
   productCode = '';
   productDescription = '';
@@ -24,22 +27,43 @@ export class VeiwProductComponent implements OnInit {
   mainImage = '';
 
   products = [
-    { id: 1, title: 'BASIC EDITION', price: 900, img: 'assets/image.png', code: 'BS-BS-01', description: 'Busy Software Basic Edition - Single User', images: ['assets/image.png', 'assets/image1.png', 'assets/image2.png'] },
-    { id: 2, title: 'STANDARD EDITION', price: 5400, img: 'assets/image.png', code: 'BS-BS-02', description: 'Busy Software Standard Edition - Single User', images: ['assets/image.png', 'assets/image1.png', 'assets/image2.png'] },
-    { id: 3, title: 'ENTERPRISE EDITION', price: 3600, img: 'assets/image.png', code: 'BS-BS-03', description: 'Busy Software Enterprise Edition - Single User', images: ['assets/image.png', 'assets/image1.png', 'assets/image2.png'] }
+    {
+      id: 1,
+      title: 'BASIC EDITION',
+      price: 9000,
+      code: 'BS-BS-01',
+      description: 'Busy Software Basic Edition',
+      images: ['assets/image.png']
+    },
+    {
+      id: 2,
+      title: 'STANDARD EDITION',
+      price: 13500,
+      code: 'BS-BS-02',
+      description: 'Busy Software Standard Edition',
+      images: ['assets/image.png']
+    },
+    {
+      id: 3,
+      title: 'ENTERPRISE EDITION',
+      price: 18000,
+      code: 'BS-BS-03',
+      description: 'Busy Software Enterprise Edition',
+      images: ['assets/image.png']
+    }
   ];
 
   constructor(
     private route: ActivatedRoute,
     private cartService: CartService,
-    private router: Router          // ✅ PROPER ROUTER INJECTION
+    private router: Router
   ) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.productId = id ? +id : null;
+    this.productId = Number(this.route.snapshot.paramMap.get('id'));
 
     const product = this.products.find(p => p.id === this.productId);
+
     if (product) {
       this.productTitle = product.title;
       this.productCode = product.code;
@@ -50,22 +74,19 @@ export class VeiwProductComponent implements OnInit {
     }
   }
 
-  changeImage(img: string) {
-    this.mainImage = img;
-  }
-
   addToCart() {
-    const product = {
+    this.cartService.addToCart({
       id: this.productId,
       title: this.productTitle,
       price: this.price,
       qty: this.qty,
       image: this.mainImage
-    };
-
-    this.cartService.addToCart(product);
+    });
 
     this.router.navigate(['/products/cart']);
-   // ✅ NOW WORKS
+  }
+
+  buyNow() {
+    this.router.navigate(['/products/checkout'])
   }
 }

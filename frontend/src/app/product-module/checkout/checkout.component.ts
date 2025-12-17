@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-checkout',
@@ -12,35 +11,59 @@ import { Router } from '@angular/router';
 })
 export class CheckoutComponent implements OnInit {
 
+  currentStep = 1;
+
+  // LOGIN
   emailOrMobile = '';
   password = '';
 
-  constructor(private router: Router) {}
+  // ADDRESS
+  address = {
+    name: '',
+    mobile: '',
+    address: '',
+    city: '',
+    pincode: ''
+  };
+
+  // PAYMENT
+  selectedPayment = '';
 
   ngOnInit(): void {
-    // ✅ If user already logged in → skip login page
     const user = localStorage.getItem('user');
     if (user) {
-      this.router.navigate(['/products/checkout']);
+      this.currentStep = 2;
     }
   }
 
-  login(): void {
+  login() {
     if (!this.emailOrMobile || !this.password) {
-      alert('Please enter Email/Mobile and Password');
+      alert('Please enter login details');
       return;
     }
+    localStorage.setItem('user', 'loggedIn');
+    this.currentStep = 2;
+  }
 
-    // ✅ Store login only once
-    localStorage.setItem(
-      'user',
-      JSON.stringify({
-        emailOrMobile: this.emailOrMobile,
-        loggedIn: true
-      })
-    );
+  saveAddress() {
+    const { name, mobile, address, city, pincode } = this.address;
+    if (!name || !mobile || !address || !city || !pincode) {
+      alert('Fill all address fields');
+      return;
+    }
+    this.currentStep = 3;
+  }
 
-    // ✅ After login → go to place order
-    this.router.navigate(['/products/place-order']);
+  confirmSummary() {
+    this.currentStep = 4;
+  }
+
+  placeOrder() {
+    if (!this.selectedPayment) {
+      alert('Select payment method');
+      return;
+    }
+    alert('🎉 Order placed successfully');
+    this.currentStep = 5;
   }
 }
