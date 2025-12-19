@@ -2,7 +2,8 @@ import {
   Component,
   ElementRef,
   HostListener,
-  ViewChild
+  ViewChild,
+  OnInit
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -11,6 +12,8 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+
 
 type UserRole = 'Admin' | 'User' | 'Subuser';
 
@@ -21,50 +24,54 @@ type UserRole = 'Admin' | 'User' | 'Subuser';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
-  /* ================= VIEW REFERENCES ================= */
   @ViewChild('dropdown') dropdownRef!: ElementRef;
   @ViewChild('loginAnchor') loginAnchorRef!: ElementRef;
 
-  /* ================= UI STATE ================= */
   showLoginDropdown = false;
   showSignup = false;
 
-  selectedRole: UserRole = 'Admin';
+  selectedRole: UserRole = 'User';
 
-  /* ================= FORMS ================= */
   loginForm!: FormGroup;
   signupForm!: FormGroup;
 
-  /* ================= AUTH STATE ================= */
   isLoggedIn = false;
-  loggedRole: UserRole | null = null;
+  loggedRole: string | null = null;
   loggedName: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService
+  ) {
     this.buildForms();
   }
 
-  /* ================= FORM BUILDERS ================= */
+  ngOnInit(): void {
+    if (this.auth.isLoggedIn()) {
+      const user = this.auth.getUser();
+      this.isLoggedIn = true;
+      this.loggedRole = user.role;
+      this.loggedName = user.name;
+    }
+  }
+
   private buildForms(): void {
     this.loginForm = this.fb.group({
       webId: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', Validators.required]
     });
 
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', Validators.required]
     });
   }
 
-  /* ================= UI ACTIONS ================= */
   toggleLoginDropdown(event: MouseEvent): void {
-    event.preventDefault();
     event.stopPropagation();
-
     this.showLoginDropdown = !this.showLoginDropdown;
     this.showSignup = false;
   }
@@ -81,43 +88,58 @@ export class LoginComponent {
     this.showSignup = false;
   }
 
-  /* ================= LOGIN ================= */
+  /* ================= REAL LOGIN ================= */
   submitLogin(): void {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
+    if (this.loginForm.invalid) return;
 
-    const { webId } = this.loginForm.value;
+    const payload = {
+      email: this.loginForm.value.webId,
+      password: this.loginForm.value.password
+    };
 
-    this.isLoggedIn = true;
-    this.loggedRole = this.selectedRole;
-    this.loggedName = webId;
+    this.auth.signin(payload).subscribe({
+      next: (res: any) => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('role', res.user.role);
+        localStorage.setItem('name', res.user.name);
 
-    this.showLoginDropdown = false;
-    this.loginForm.reset();
+        this.isLoggedIn = true;
+        this.loggedRole = res.user.role;
+        this.loggedName = res.user.name;
+
+        this.showLoginDropdown = false;
+        this.loginForm.reset();
+      },
+      error: err => alert(err.error.message || 'Login failed')
+    });
   }
 
-  /* ================= SIGNUP ================= */
+  /* ================= REAL SIGNUP ================= */
   submitSignup(): void {
-    if (this.signupForm.invalid) {
-      this.signupForm.markAllAsTouched();
-      return;
-    }
+    if (this.signupForm.invalid) return;
 
-    alert('Signup Successful!');
-    this.signupForm.reset();
-    this.showSignup = false;
+    const payload = {
+      ...this.signupForm.value,
+      role: this.selectedRole.toLowerCase()
+    };
+
+    this.auth.signup(payload).subscribe({
+      next: () => {
+        alert('Signup successful. Please login.');
+        this.signupForm.reset();
+        this.showSignup = false;
+      },
+      error: err => alert(err.error.message || 'Signup failed')
+    });
   }
 
-  /* ================= LOGOUT ================= */
   logout(): void {
+    this.auth.logout();
     this.isLoggedIn = false;
     this.loggedRole = null;
     this.loggedName = null;
   }
 
-  /* ================= CLOSE DROPDOWN ON OUTSIDE CLICK ================= */
   @HostListener('document:click', ['$event'])
   closeDropdown(event: MouseEvent): void {
     if (!this.showLoginDropdown) return;
