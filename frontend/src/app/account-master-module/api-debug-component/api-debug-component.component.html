@@ -1,0 +1,300 @@
+<div class="container mt-4">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">
+        <i class="bi bi-bug-fill me-2"></i>
+        API Debug Tool
+      </h4>
+      <span class="badge bg-light text-dark">Testing Mode</span>
+    </div>
+    
+    <div class="card-body">
+      <!-- Input Section -->
+      <div class="mb-4">
+        <label class="form-label fw-bold">
+          <i class="bi bi-key me-1"></i>
+          Master Code:
+        </label>
+        <div class="input-group input-group-lg">
+          <span class="input-group-text bg-light">
+            <i class="bi bi-123"></i>
+          </span>
+          <input 
+            [(ngModel)]="masterCode" 
+            class="form-control" 
+            placeholder="Enter master code (e.g., 1304)"
+            (keyup.enter)="testConnection()"
+          >
+          <button class="btn btn-outline-secondary" type="button" (click)="clearResults()" 
+                  [disabled]="isTesting || isLoading" title="Clear Results">
+            <i class="bi bi-trash"></i> Clear
+          </button>
+        </div>
+        <div class="form-text">
+          <small class="text-muted">
+            <i class="bi bi-info-circle me-1"></i>
+            Default headers: <code>SC=9</code>, <code>UserName=m</code>, <code>Pwd=m</code>
+          </small>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="mb-4">
+        <div class="d-flex flex-wrap gap-2">
+          <button class="btn btn-primary" (click)="testConnection()" [disabled]="isTesting">
+            <span *ngIf="isTesting" class="spinner-border spinner-border-sm me-2"></span>
+            <i class="bi bi-plug me-1"></i>
+            {{ isTesting ? 'Testing Connection...' : 'Test Connection' }}
+          </button>
+          
+          <button class="btn btn-warning" (click)="getAccount()" [disabled]="isLoading">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+            <i class="bi bi-download me-1"></i>
+            {{ isLoading ? 'Loading Account...' : 'Get Account Data' }}
+          </button>
+          
+          <button class="btn btn-info" (click)="checkCors()" [disabled]="isTesting || isLoading">
+            <i class="bi bi-shield-check me-1"></i>
+            Check CORS
+          </button>
+        </div>
+      </div>
+
+      <!-- Raw Response Section -->
+      <div *ngIf="rawResponse" class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0">
+            <i class="bi bi-file-code me-2"></i>
+            Raw Response
+          </h5>
+          <button class="btn btn-sm btn-outline-secondary" (click)="copyRawResponse()">
+            <i class="bi bi-clipboard me-1"></i> Copy
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <pre class="mb-0 bg-dark text-light p-3 rounded" 
+                 style="max-height: 200px; overflow: auto; font-size: 12px;">{{ rawResponse }}</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Test Result Section -->
+      <div *ngIf="testResult" class="mb-4">
+        <h5 class="border-bottom pb-2">
+          <i class="bi bi-check-circle text-success me-2"></i>
+          Connection Test Result
+        </h5>
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <span class="badge bg-info mb-2">Method</span>
+                  <p class="mb-0">{{ testResult.method }}</p>
+                </div>
+                <div class="mb-3">
+                  <span class="badge bg-success mb-2">Status</span>
+                  <p class="mb-0">{{ testResult.status }}</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <span class="badge bg-secondary mb-2">Length</span>
+                  <p class="mb-0">{{ testResult.length }} characters</p>
+                </div>
+                <div class="mb-3">
+                  <span [ngClass]="{'badge bg-danger': testResult.isHtml, 'badge bg-success': !testResult.isHtml}">
+                    {{ testResult.isHtml ? 'Contains HTML' : 'Pure XML' }}
+                  </span>
+                  <p class="small text-muted mt-1 mb-0">
+                    {{ testResult.isHtml ? 'Proxy might be misconfigured' : 'Response looks good' }}
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="alert alert-light border">
+                  <h6 class="alert-heading">Diagnosis:</h6>
+                  <ul class="mb-0 small">
+                    <li *ngIf="testResult.isHtml">⚠️ Proxy may not be forwarding to API</li>
+                    <li *ngIf="!testResult.isHtml">✅ Response appears to be XML data</li>
+                    <li>📊 {{ testResult.length }} chars received</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="d-flex">
+          <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+          <div>
+            <h5 class="alert-heading">Error Occurred</h5>
+            <pre class="mb-0" style="white-space: pre-wrap; font-size: 13px;">{{ error }}</pre>
+          </div>
+        </div>
+        <button type="button" class="btn-close" (click)="error = ''"></button>
+      </div>
+
+      <!-- Account Data Section -->
+      <div *ngIf="accountData" class="mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">
+            <i class="bi bi-person-badge text-primary me-2"></i>
+            Account Data Retrieved
+          </h5>
+          <div>
+            <button class="btn btn-sm btn-outline-primary me-2" (click)="copyToClipboard()">
+              <i class="bi bi-clipboard me-1"></i> Copy JSON
+            </button>
+            <span class="badge bg-success">Success</span>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-body">
+            <!-- Quick Summary -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <div class="card bg-light border">
+                  <div class="card-body">
+                    <h6 class="card-title">Basic Info</h6>
+                    <table class="table table-sm">
+                      <tr>
+                        <th width="40%">Account Name:</th>
+                        <td>{{ accountData.Name || 'N/A' }}</td>
+                      </tr>
+                      <tr>
+                        <th>Master Code:</th>
+                        <td>
+                          <span class="badge bg-info">{{ accountData.tmpCode || 'N/A' }}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Parent Group:</th>
+                        <td>{{ accountData.ParentGroup || 'N/A' }}</td>
+                      </tr>
+                      <tr>
+                        <th>Tax Type:</th>
+                        <td>{{ accountData.TaxType || 'N/A' }}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card bg-light border">
+                  <div class="card-body">
+                    <h6 class="card-title">Contact Info</h6>
+                    <table class="table table-sm">
+                      <tr>
+                        <th width="40%">Mobile:</th>
+                        <td>{{ accountData.Address?.Mobile || 'N/A' }}</td>
+                      </tr>
+                      <tr>
+                        <th>GST No:</th>
+                        <td><code>{{ accountData.Address?.GSTNo || 'N/A' }}</code></td>
+                      </tr>
+                      <tr>
+                        <th>PAN:</th>
+                        <td><code>{{ accountData.Address?.ITPAN || 'N/A' }}</code></td>
+                      </tr>
+                      <tr>
+                        <th>Email:</th>
+                        <td>{{ accountData.Address?.Email || 'N/A' }}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Full JSON View -->
+            <div class="accordion" id="jsonAccordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                          data-bs-target="#jsonCollapse" aria-expanded="false" aria-controls="jsonCollapse">
+                    <i class="bi bi-code-slash me-2"></i>
+                    View Full JSON Data
+                  </button>
+                </h2>
+                <div id="jsonCollapse" class="accordion-collapse collapse" data-bs-parent="#jsonAccordion">
+                  <div class="accordion-body">
+                    <pre class="bg-dark text-light p-3 rounded" 
+                         style="max-height: 400px; overflow: auto; font-size: 12px;">{{ accountData | json }}</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instructions -->
+      <div *ngIf="!testResult && !accountData && !error" class="text-center py-5 text-muted">
+        <div class="mb-4">
+          <i class="bi bi-tools" style="font-size: 4rem; opacity: 0.5;"></i>
+        </div>
+        <h4 class="mb-3">API Debug Console</h4>
+        <p class="mb-4">Use this tool to diagnose API connectivity issues and test your configuration.</p>
+        
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <div class="card border">
+              <div class="card-body">
+                <h5 class="card-title">Debugging Steps</h5>
+                <div class="list-group list-group-flush">
+                  <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h6 class="mb-1">1. Test Connection</h6>
+                      <span class="badge bg-primary">First Step</span>
+                    </div>
+                    <p class="mb-1 small">Check if API is reachable and proxy is working</p>
+                  </div>
+                  <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h6 class="mb-1">2. Check CORS</h6>
+                      <span class="badge bg-info">Optional</span>
+                    </div>
+                    <p class="mb-1 small">Test cross-origin request settings</p>
+                  </div>
+                  <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h6 class="mb-1">3. Get Account Data</h6>
+                      <span class="badge bg-warning">Main Test</span>
+                    </div>
+                    <p class="mb-1 small">Fetch actual account data from API</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-footer text-muted">
+      <div class="row">
+        <div class="col-md-4">
+          <strong>API Endpoint:</strong>
+          <code>http://103.174.86.37:982</code>
+        </div>
+        <div class="col-md-4 text-center">
+          <strong>Proxy Path:</strong>
+          <code>/api-proxy</code>
+        </div>
+        <div class="col-md-4 text-end">
+          <strong>Required Headers:</strong>
+          <span class="badge bg-secondary ms-1">SC</span>
+          <span class="badge bg-secondary ms-1">MasterCode</span>
+          <span class="badge bg-secondary ms-1">UserName</span>
+          <span class="badge bg-secondary ms-1">Pwd</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

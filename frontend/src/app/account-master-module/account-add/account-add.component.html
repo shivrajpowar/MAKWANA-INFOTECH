@@ -1,158 +1,211 @@
-
-<div class="account-conatiner mt-5">
-  <div>
-    <h2>Account Master</h2>
-    <form [formGroup]="accountForm" (ngSubmit)="submit()">
-
-    <h3 class="mb-3 mt-4 border-bottom pb-2 text-primary">Account Details</h3>
-
-    <div class="row">
-        <div class="field">
-            <label>Name</label>
-            <input formControlName="name">
-        </div>
-
-        <div class="field">
-            <label>Alias</label>
-            <input formControlName="alias">
-        </div>
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">Add New Account</h4>
     </div>
+    
+    <div class="card-body">
+      <!-- Success Message -->
+      <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ successMessage }}
+        <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+      </div>
 
-    <div class="row">
-        <div class="field">
-            <label>Print Name</label>
-            <input formControlName="printName">
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ errorMessage }}
+        <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+      </div>
+
+      <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+        <!-- Account Details Section -->
+        <div class="section mb-4">
+          <h5 class="section-title">Account Details</h5>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Name *</label>
+              <input type="text" class="form-control" formControlName="name" 
+                     [class.is-invalid]="isFieldInvalid('name')">
+              <div *ngIf="isFieldInvalid('name')" class="invalid-feedback">
+                Account name is required
+              </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Alias</label>
+              <input type="text" class="form-control" formControlName="alias">
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Print Name</label>
+              <input type="text" class="form-control" formControlName="printName">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Parent Group *</label>
+              <select class="form-select" formControlName="parentGroup"
+                      [class.is-invalid]="isFieldInvalid('parentGroup')">
+                <option *ngFor="let group of parentGroups" [value]="group">{{ group }}</option>
+              </select>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Cheque Print Name</label>
+              <input type="text" class="form-control" formControlName="chequePrintName">
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <div class="form-check mt-4">
+                <input class="form-check-input" type="checkbox" formControlName="billByBillBalancing">
+                <label class="form-check-label">Bill by Bill Balancing</label>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="field">
-            <label>Parent Group</label>
-            <select formControlName="parentGroup">
-                <option>Sundry Debtors</option>
-                <option>Sundry Creditors</option>
-            </select>
+        <!-- Address Details Section -->
+        <div class="section mb-4">
+          <h5 class="section-title">Address Details</h5>
+          <div formGroupName="address">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Address Line 1</label>
+                <input type="text" class="form-control" formControlName="address1">
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Address Line 2</label>
+                <input type="text" class="form-control" formControlName="address2">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Mobile *</label>
+                <input type="text" class="form-control" formControlName="mobile" 
+                       [class.is-invalid]="isFieldInvalidInGroup('address', 'mobile')">
+                <div *ngIf="isFieldInvalidInGroup('address', 'mobile')" class="invalid-feedback">
+                  Valid 10-digit mobile number is required
+                </div>
+              </div>
+              
+              <div class="col-md-4 mb-3">
+                <label class="form-label">WhatsApp Number</label>
+                <input type="text" class="form-control" formControlName="whatsappNo">
+              </div>
+              
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" formControlName="email">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">PAN Number</label>
+                <input type="text" class="form-control" formControlName="itpan" 
+                       placeholder="AAAAA1234A">
+              </div>
+              
+              <div class="col-md-4 mb-3">
+                <label class="form-label">GST Number</label>
+                <input type="text" class="form-control" formControlName="gstNo">
+              </div>
+              
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Country</label>
+                <input type="text" class="form-control" formControlName="countryName">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">State</label>
+                <input type="text" class="form-control" formControlName="stateName">
+              </div>
+              
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Area</label>
+                <input type="text" class="form-control" formControlName="areaName">
+              </div>
+              
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Account Number</label>
+                <input type="text" class="form-control" formControlName="accNo">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Bank Name</label>
+                <input type="text" class="form-control" formControlName="bankName">
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label class="form-label">IFSC Code</label>
+                <input type="text" class="form-control" formControlName="ifsc">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Tax Information Section -->
+        <div class="section mb-4">
+          <h5 class="section-title">Tax Information</h5>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Tax Type</label>
+              <select class="form-select" formControlName="taxType">
+                <option value="Others">Others</option>
+                <option value="VAT">VAT</option>
+                <option value="CST">CST</option>
+                <option value="GST">GST</option>
+              </select>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Type of Dealer GST</label>
+              <select class="form-select" formControlName="typeOfDealerGST">
+                <option value="Registered">Registered</option>
+                <option value="Unregistered">Unregistered</option>
+                <option value="Composite">Composite</option>
+                <option value="SEZ">SEZ</option>
+              </select>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Reverse Charge Type</label>
+              <select class="form-select" formControlName="reverseChargeType">
+                <option value="">Select</option>
+                <option value="Regular">Regular</option>
+                <option value="Reverse">Reverse</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between">
+          <div>
+            <button type="submit" class="btn btn-primary me-2" 
+                    [disabled]="isSubmitting || accountForm.invalid">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+              {{ isSubmitting ? 'Creating...' : 'Create Account' }}
+            </button>
+            <button type="button" class="btn btn-secondary me-2" 
+                    (click)="onReset()" [disabled]="isSubmitting">
+              Reset
+            </button>
+          </div>
+          
+          <button type="button" class="btn btn-outline-primary" 
+                  (click)="navigateToModify()">
+            Go to Modify Account
+          </button>
+        </div>
+      </form>
     </div>
-
-    <label class="checkbox">
-        <input type="checkbox" formControlName="billByBillBalancing">
-        Bill By Bill Balancing
-    </label>
-
-    <hr>
-
-    <h3 class="mb-3 mt-4 border-bottom pb-2 text-primary">Address Details</h3>
-
-    <div formGroupName="address">
-
-        <div class="row">
-            <div class="field">
-                <label>Address 1</label>
-                <input formControlName="address1">
-            </div>
-
-            <div class="field">
-                <label>Address 2</label>
-                <input formControlName="address2">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="field">
-                <label>Mobile</label>
-                <input formControlName="mobile">
-            </div>
-
-            <div class="field">
-                <label>WhatsApp</label>
-                <input formControlName="whatsappNo">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="field">
-                <label>PAN</label>
-                <input formControlName="itpan">
-            </div>
-
-            <div class="field">
-                <label>GST No</label>
-                <input formControlName="gstNo">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="field">
-                <label>Country</label>
-                <input formControlName="countryName">
-            </div>
-
-            <div class="field">
-                <label>State</label>
-                <input formControlName="stateName">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="field">
-                <label>Area</label>
-                <input formControlName="areaName">
-            </div>
-
-            <div class="field">
-                <label>Account No</label>
-                <input formControlName="accNo">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="field">
-                <label>Bank</label>
-                <input formControlName="bankName">
-            </div>
-
-            <div class="field">
-                <label>IFSC</label>
-                <input formControlName="ifsc">
-            </div>
-        </div>
-
-    </div>
-
-    <hr>
-
-    <h3 class="mb-3 mt-4 border-bottom pb-2 text-primary">Tax & Other Info</h3>
-
-    <div class="row">
-        <div class="field">
-            <label>Tax Type</label>
-            <select formControlName="taxType">
-                <option>Others</option>
-                <option>GST</option>
-            </select>
-        </div>
-
-        <div class="field">
-            <label>Dealer Type</label>
-            <select formControlName="typeOfDealerGST">
-                <option>Registered</option>
-                <option>Unregistered</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="field">
-            <label>Cheque Print Name</label>
-            <input formControlName="chequePrintName">
-        </div>
-    </div>
-
-    <button type="submit" class="btn btn-success btn-md">
-  💾 Save Account
-</button>
-
-</form>
-</div>  
+  </div>
 </div>
-
-

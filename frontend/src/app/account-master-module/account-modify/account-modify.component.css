@@ -1,0 +1,122 @@
+/* Header info styling */
+.alert-light {
+  background-color: #f8f9fa;
+  border-left: 4px solid #ffc107;
+}
+
+/* Section styling */
+.section {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.section-title {
+  color: #495057;
+  border-bottom: 2px solid #ffc107;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* Form controls */
+.form-control, .form-select {
+  border: 1px solid #ced4da;
+  transition: border-color 0.15s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #ffc107;
+  box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+}
+
+/* Search section */
+.search-section .card {
+  background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+}
+
+/* Button styling */
+.btn-warning {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #212529;
+  font-weight: 500;
+  padding: 8px 20px;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-outline-info {
+  border-color: #0dcaf0;
+  color: #0dcaf0;
+}
+
+.btn-outline-info:hover {
+  background-color: #0dcaf0;
+  color: white;
+}
+
+/* Loading spinner */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.3em;
+}
+
+/* Code display */
+code {
+  background-color: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: #d63384;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .section {
+    padding: 15px;
+  }
+  
+  .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .d-flex {
+    flex-direction: column;
+  }
+}
+
+/* Alert enhancements */
+.alert {
+  border: none;
+  border-left: 4px solid transparent;
+}
+
+.alert-success {
+  border-left-color: #198754;
+}
+
+.alert-danger {
+  border-left-color: #dc3545;
+}
+
+.alert-info {
+  border-left-color: #0dcaf0;
+}
+
+.alert-secondary {
+  border-left-color: #6c757d;
+}

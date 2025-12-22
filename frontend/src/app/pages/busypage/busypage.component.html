@@ -41,6 +41,10 @@
                         <a class="dropdown-item" routerLink="/busypage/accountMaster/Acc-list" (click)="closeAll()">List</a>
                     </li>
 
+                      <li *ngIf="accountOpen">
+                        <a class="dropdown-item" routerLink="/busypage/accountMaster/debug" (click)="closeAll()">Debug</a>
+                    </li>
+
                     <li>
                         <hr class="dropdown-divider">
                     </li>

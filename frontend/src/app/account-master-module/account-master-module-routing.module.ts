@@ -3,11 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { AccountAddComponent } from './account-add/account-add.component';
 import { AccountModifyComponent } from './account-modify/account-modify.component';
 import { AccountListComponent } from './account-list/account-list.component';
+import { ApiDebugComponentComponent } from './api-debug-component/api-debug-component.component';
+
 
 const routes: Routes = [
   {path:"Acc-add",component:AccountAddComponent},
   {path:"Acc-modify",component:AccountModifyComponent},
-  {path:"Acc-list",component:AccountListComponent}
+  {path:"Acc-list",component:AccountListComponent},
+  {path:"debug", component:ApiDebugComponentComponent}
 ];
 
 @NgModule({

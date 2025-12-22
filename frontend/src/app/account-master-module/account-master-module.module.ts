@@ -5,6 +5,7 @@ import { AccountMasterModuleRoutingModule } from './account-master-module-routin
 import { AccountAddComponent } from './account-add/account-add.component';
 import { AccountModifyComponent } from './account-modify/account-modify.component';
 import { AccountListComponent } from './account-list/account-list.component';
+import { ApiDebugComponentComponent } from './api-debug-component/api-debug-component.component';
 
 
 @NgModule({
@@ -12,7 +13,7 @@ import { AccountListComponent } from './account-list/account-list.component';
   imports: [
     CommonModule,
     AccountMasterModuleRoutingModule,
-    AccountAddComponent,AccountModifyComponent,AccountListComponent
+    AccountAddComponent,AccountModifyComponent,AccountListComponent,ApiDebugComponentComponent
   ]
 })
 export class AccountMasterModuleModule { }

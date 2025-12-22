@@ -1,0 +1,17 @@
+{
+  "/api-proxy/*": {
+    "target": "http://103.174.86.37:982",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/api-proxy": ""
+    }
+  },
+  "/api/accounts/*": {
+    "target": "http://103.174.86.37:982",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

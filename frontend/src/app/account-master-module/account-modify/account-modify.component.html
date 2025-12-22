@@ -1,1 +1,424 @@
-<p>account-modify works!</p>
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-warning text-dark">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Modify Account</h4>
+        <div>
+          <button class="btn btn-sm btn-outline-info me-2" (click)="showHeadersInfo()" 
+                  title="Show Request Headers">
+            <i class="bi bi-info-circle"></i> Headers Info
+          </button>
+          <small *ngIf="masterCode" class="text-muted">Editing: {{ masterCode }}</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-body">
+      <!-- Success Message -->
+      <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ successMessage }}
+        <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+      </div>
+
+      <!-- Info Message -->
+      <div *ngIf="infoMessage" class="alert alert-info alert-dismissible fade show" role="alert">
+        {{ infoMessage }}
+        <button type="button" class="btn-close" (click)="infoMessage = ''"></button>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ errorMessage }}
+        <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+      </div>
+
+      <!-- API Test Results -->
+      <div *ngIf="apiTestResult" class="alert alert-secondary alert-dismissible fade show" role="alert">
+        <h6 class="alert-heading">API Connection Test</h6>
+        <div class="row">
+          <div class="col-md-6">
+            <small><strong>Status:</strong> {{ apiTestResult.status }} {{ apiTestResult.statusText }}</small>
+          </div>
+          <div class="col-md-6">
+            <small><strong>Headers:</strong> {{ apiTestResult.headers?.length || 0 }} headers present</small>
+          </div>
+        </div>
+        <div *ngIf="apiTestResult.body" class="mt-2">
+          <small><strong>Response Preview:</strong> {{ apiTestResult.body }}</small>
+        </div>
+        <button type="button" class="btn-close" (click)="apiTestResult = null"></button>
+      </div>
+
+      <!-- Search Section -->
+      <div class="search-section mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Find Account</h5>
+            <div class="row g-3 align-items-center">
+              <div class="col-md-8">
+                <label for="searchMasterCode" class="form-label">Enter Master Code:</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light">
+                    <i class="bi bi-key"></i>
+                  </span>
+                  <input type="text" id="searchMasterCode" class="form-control" 
+                         placeholder="Enter account master code (e.g., 1304)"
+                         (keyup.enter)="onSearch()">
+                  <button class="btn btn-primary" type="button" 
+                          (click)="onSearchWithHeadersInfo()" 
+                          [disabled]="isLoading || isTestingApi">
+                    <span *ngIf="isLoading || isTestingApi" class="spinner-border spinner-border-sm me-2"></span>
+                    {{ isLoading ? 'Loading...' : (isTestingApi ? 'Testing...' : 'Search Account') }}
+                  </button>
+                </div>
+                <div class="form-text">
+                  <small class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Using Headers: SC=9, UserName=m, Pwd=m + MasterCode
+                  </small>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="d-flex justify-content-end align-items-end h-100 gap-2">
+                  <button type="button" class="btn btn-outline-secondary" 
+                          (click)="clearForm()">
+                    <i class="bi bi-x-circle"></i> Clear
+                  </button>
+                  <button type="button" class="btn btn-outline-primary" 
+                          (click)="navigateToAdd()">
+                    <i class="bi bi-plus-circle"></i> Add New
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+          <span class="visually-hidden">Loading account details...</span>
+        </div>
+        <p class="mt-3">Fetching account details...</p>
+        <div class="text-muted small">
+          <p>Sending request with headers:</p>
+          <ul class="list-unstyled">
+            <li><code>SC: 9</code></li>
+            <li><code>MasterCode: {{ masterCode }}</code></li>
+            <li><code>UserName: m</code></li>
+            <li><code>Pwd: m</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Form Section (only show when data is loaded) -->
+      <form *ngIf="isEditing && !isLoading" [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Request Info Banner -->
+        <div class="alert alert-light border mb-4">
+          <div class="row">
+            <div class="col-md-6">
+              <small><strong>Request Configuration:</strong></small><br>
+              <small class="text-muted">SC: 9 | UserName: m | Pwd: m | MasterCode: {{ masterCode }}</small>
+            </div>
+            <div class="col-md-6 text-end">
+              <small class="text-muted">Account Code: {{ accountForm.get('tmpCode')?.value || 'N/A' }}</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Details Section -->
+        <div class="section mb-4">
+          <h5 class="section-title">Account Details</h5>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Name *</label>
+              <input type="text" class="form-control" formControlName="name" 
+                     [class.is-invalid]="isFieldInvalid('name')">
+              <div *ngIf="isFieldInvalid('name')" class="invalid-feedback">
+                Account name is required
+              </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Alias</label>
+              <input type="text" class="form-control" formControlName="alias">
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Print Name</label>
+              <input type="text" class="form-control" formControlName="printName">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Parent Group *</label>
+              <select class="form-select" formControlName="parentGroup"
+                      [class.is-invalid]="isFieldInvalid('parentGroup')">
+                <option *ngFor="let group of parentGroups" [value]="group">{{ group }}</option>
+              </select>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Cheque Print Name</label>
+              <input type="text" class="form-control" formControlName="chequePrintName">
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <div class="form-check mt-4">
+                <input class="form-check-input" type="checkbox" formControlName="billByBillBalancing">
+                <label class="form-check-label">Bill by Bill Balancing</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Address Details Section -->
+        <div class="section mb-4">
+          <h5 class="section-title">Address Details</h5>
+          <div formGroupName="address">
+            <!-- Address lines -->
+            <div class="row mb-3">
+              <div class="col-12">
+                <label class="form-label">Address</label>
+                <div class="row g-2">
+                  <div class="col-md-4">
+                    <input type="text" class="form-control" formControlName="address1" placeholder="Address Line 1">
+                  </div>
+                  <div class="col-md-4">
+                    <input type="text" class="form-control" formControlName="address2" placeholder="Address Line 2">
+                  </div>
+                  <div class="col-md-4">
+                    <input type="text" class="form-control" formControlName="address3" placeholder="Address Line 3">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label class="form-label">Mobile *</label>
+                <input type="text" class="form-control" formControlName="mobile" 
+                       [class.is-invalid]="isFieldInvalidInGroup('address', 'mobile')">
+                <div *ngIf="isFieldInvalidInGroup('address', 'mobile')" class="invalid-feedback">
+                  Valid 10-digit mobile number is required
+                </div>
+              </div>
+              
+              <div class="col-md-4">
+                <label class="form-label">WhatsApp Number</label>
+                <input type="text" class="form-control" formControlName="whatsappNo">
+              </div>
+              
+              <div class="col-md-4">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" formControlName="email">
+              </div>
+            </div>
+
+            <!-- Contact Person -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Contact Person</label>
+                <input type="text" class="form-control" formControlName="contact">
+              </div>
+              
+              <div class="col-md-3">
+                <label class="form-label">PAN Number</label>
+                <input type="text" class="form-control" formControlName="itpan" 
+                       placeholder="AAAAA1234A">
+              </div>
+              
+              <div class="col-md-3">
+                <label class="form-label">GST Number</label>
+                <input type="text" class="form-control" formControlName="gstNo">
+              </div>
+            </div>
+
+            <!-- Location Details -->
+            <div class="row mb-3">
+              <div class="col-md-3">
+                <label class="form-label">Country</label>
+                <input type="text" class="form-control" formControlName="countryName">
+              </div>
+              
+              <div class="col-md-3">
+                <label class="form-label">State</label>
+                <input type="text" class="form-control" formControlName="stateName">
+              </div>
+              
+              <div class="col-md-3">
+                <label class="form-label">City</label>
+                <input type="text" class="form-control" formControlName="cityName">
+              </div>
+              
+              <div class="col-md-3">
+                <label class="form-label">PIN Code</label>
+                <input type="text" class="form-control" formControlName="pincode">
+              </div>
+            </div>
+
+            <!-- Additional Location -->
+            <div class="row mb-3">
+              <div class="col-md-3">
+                <label class="form-label">Region</label>
+                <input type="text" class="form-control" formControlName="regionName">
+              </div>
+              
+              <div class="col-md-3">
+                <label class="form-label">Area</label>
+                <input type="text" class="form-control" formControlName="areaName">
+              </div>
+              
+              <div class="col-md-3">
+                <label class="form-label">Department</label>
+                <input type="text" class="form-control" formControlName="contDeptName">
+              </div>
+              
+              <div class="col-md-3">
+                <label class="form-label">Station</label>
+                <input type="text" class="form-control" formControlName="station">
+              </div>
+            </div>
+
+            <!-- Bank Details -->
+            <div class="row">
+              <div class="col-md-4">
+                <label class="form-label">Account Number</label>
+                <input type="text" class="form-control" formControlName="accNo">
+              </div>
+              
+              <div class="col-md-4">
+                <label class="form-label">Bank Name</label>
+                <input type="text" class="form-control" formControlName="bankName">
+              </div>
+              
+              <div class="col-md-4">
+                <label class="form-label">IFSC Code</label>
+                <input type="text" class="form-control" formControlName="ifsc">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tax & Additional Information Section -->
+        <div class="section mb-4">
+          <h5 class="section-title">Tax & Additional Information</h5>
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Tax Type</label>
+              <select class="form-select" formControlName="taxType">
+                <option value="Others">Others</option>
+                <option value="VAT">VAT</option>
+                <option value="CST">CST</option>
+                <option value="GST">GST</option>
+              </select>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Type of Dealer GST</label>
+              <select class="form-select" formControlName="typeOfDealerGST">
+                <option value="Registered">Registered</option>
+                <option value="Unregistered">Unregistered</option>
+                <option value="Composite">Composite</option>
+                <option value="SEZ">SEZ</option>
+              </select>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Supplier Type</label>
+              <select class="form-select" formControlName="supplierType">
+                <option *ngFor="let type of supplierTypes" [value]="type.value">
+                  {{ type.label }}
+                </option>
+              </select>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Reverse Charge Type</label>
+              <select class="form-select" formControlName="reverseChargeType">
+                <option *ngFor="let type of reverseChargeTypes" [value]="type">
+                  {{ type }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Price Level</label>
+              <input type="text" class="form-control" formControlName="priceLevel">
+            </div>
+            
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Purchase Price Level</label>
+              <input type="text" class="form-control" formControlName="priceLevelForPurc">
+            </div>
+            
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Input Type</label>
+              <select class="form-select" formControlName="inputType">
+                <option *ngFor="let type of inputTypes" [value]="type">
+                  {{ type }}
+                </option>
+              </select>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+              <label class="form-label">GST Return Period</label>
+              <select class="form-select" formControlName="gstReturnFilingPeriod">
+                <option *ngFor="let period of gstReturnPeriods" [value]="period">
+                  {{ period }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden fields -->
+        <input type="hidden" formControlName="tmpCode">
+        <input type="hidden" formControlName="tmpParentGrpCode">
+
+        <!-- Form Actions -->
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <button type="submit" class="btn btn-warning me-2" 
+                    [disabled]="isSubmitting || accountForm.invalid">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+              {{ isSubmitting ? 'Updating...' : 'Update Account' }}
+            </button>
+            <button type="button" class="btn btn-secondary me-2" 
+                    (click)="onReset()" [disabled]="isSubmitting">
+              <i class="bi bi-arrow-clockwise"></i> Reset Changes
+            </button>
+          </div>
+          
+          <div class="text-muted small">
+            <div>Master Code: <strong>{{ accountForm.get('tmpCode')?.value || masterCode }}</strong></div>
+            <div>Headers: SC=9, UserName=m, Pwd=m</div>
+          </div>
+        </div>
+      </form>
+
+      <!-- Instructions when no data is loaded -->
+      <div *ngIf="!isEditing && !isLoading" class="text-center py-5">
+        <div class="mb-4">
+          <i class="bi bi-search text-muted" style="font-size: 3rem;"></i>
+        </div>
+        <h5 class="text-muted">Search for an Account</h5>
+        <p class="text-muted">Enter a Master Code above to load and modify account details.</p>
+        <div class="alert alert-light border mt-3 text-start">
+          <h6 class="alert-heading">API Request Configuration:</h6>
+          <ul class="mb-0 small">
+            <li><strong>Default Headers:</strong> SC=9, UserName=m, Pwd=m</li>
+            <li><strong>Dynamic Header:</strong> MasterCode=[Your Input]</li>
+            <li><strong>Example:</strong> Enter "1304" to load sample account</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
