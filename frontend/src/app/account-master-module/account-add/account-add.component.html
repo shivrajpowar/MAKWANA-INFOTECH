@@ -1,211 +1,324 @@
 <div class="container mt-4">
   <div class="card">
-    <div class="card-header bg-primary text-white">
-      <h4 class="mb-0">Add New Account</h4>
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h2 class="mb-0">Create New Account</h2>
+      <div>
+        <button type="button" class="btn btn-outline-light btn-sm mr-2" 
+                (click)="viewGeneratedXML()" [disabled]="accountForm.invalid">
+          View XML
+        </button>
+        <button type="button" class="btn btn-outline-light btn-sm" 
+                (click)="fillSampleData()">
+          Fill Sample
+        </button>
+      </div>
     </div>
     
     <div class="card-body">
       <!-- Success Message -->
-      <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ successMessage }}
-        <button type="button" class="btn-close" (click)="successMessage = ''"></button>
-      </div>
-
-      <!-- Error Message -->
-      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ errorMessage }}
-        <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
-      </div>
-
-      <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
-        <!-- Account Details Section -->
-        <div class="section mb-4">
-          <h5 class="section-title">Account Details</h5>
-          <div class="row">
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Name *</label>
-              <input type="text" class="form-control" formControlName="name" 
-                     [class.is-invalid]="isFieldInvalid('name')">
-              <div *ngIf="isFieldInvalid('name')" class="invalid-feedback">
-                Account name is required
-              </div>
-            </div>
-            
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Alias</label>
-              <input type="text" class="form-control" formControlName="alias">
-            </div>
-            
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Print Name</label>
-              <input type="text" class="form-control" formControlName="printName">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Parent Group *</label>
-              <select class="form-select" formControlName="parentGroup"
-                      [class.is-invalid]="isFieldInvalid('parentGroup')">
-                <option *ngFor="let group of parentGroups" [value]="group">{{ group }}</option>
-              </select>
-            </div>
-            
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Cheque Print Name</label>
-              <input type="text" class="form-control" formControlName="chequePrintName">
-            </div>
-            
-            <div class="col-md-4 mb-3">
-              <div class="form-check mt-4">
-                <input class="form-check-input" type="checkbox" formControlName="billByBillBalancing">
-                <label class="form-check-label">Bill by Bill Balancing</label>
-              </div>
-            </div>
-          </div>
+      <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show">
+        <strong>Success!</strong> {{ successMessage }}
+        <div *ngIf="createdMasterCode" class="mt-2">
+          <strong>Note this Master Code for future reference:</strong> {{ createdMasterCode }}
         </div>
-
-        <!-- Address Details Section -->
+        <button type="button" class="close" (click)="successMessage = ''">
+          <span>&times;</span>
+        </button>
+      </div>
+      
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show">
+        <strong>Error!</strong> {{ errorMessage }}
+        <button type="button" class="close" (click)="errorMessage = ''">
+          <span>&times;</span>
+        </button>
+      </div>
+      
+      <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+        <!-- Section 1: Basic Information -->
         <div class="section mb-4">
-          <h5 class="section-title">Address Details</h5>
-          <div formGroupName="address">
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Address Line 1</label>
-                <input type="text" class="form-control" formControlName="address1">
-              </div>
-              
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Address Line 2</label>
-                <input type="text" class="form-control" formControlName="address2">
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Mobile *</label>
-                <input type="text" class="form-control" formControlName="mobile" 
-                       [class.is-invalid]="isFieldInvalidInGroup('address', 'mobile')">
-                <div *ngIf="isFieldInvalidInGroup('address', 'mobile')" class="invalid-feedback">
-                  Valid 10-digit mobile number is required
+          <h3 class="section-title">Basic Information</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Name" class="required">Account Name *</label>
+                <input type="text" id="Name" formControlName="Name" class="form-control" 
+                       placeholder="Enter account name">
+                <div *ngIf="basicInfo['Name'].invalid && basicInfo['Name'].touched" class="text-danger small">
+                  Account name is required (max 100 characters)
                 </div>
               </div>
-              
-              <div class="col-md-4 mb-3">
-                <label class="form-label">WhatsApp Number</label>
-                <input type="text" class="form-control" formControlName="whatsappNo">
-              </div>
-              
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-control" formControlName="email">
-              </div>
             </div>
-
-            <div class="row">
-              <div class="col-md-4 mb-3">
-                <label class="form-label">PAN Number</label>
-                <input type="text" class="form-control" formControlName="itpan" 
-                       placeholder="AAAAA1234A">
-              </div>
-              
-              <div class="col-md-4 mb-3">
-                <label class="form-label">GST Number</label>
-                <input type="text" class="form-control" formControlName="gstNo">
-              </div>
-              
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Country</label>
-                <input type="text" class="form-control" formControlName="countryName">
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-4 mb-3">
-                <label class="form-label">State</label>
-                <input type="text" class="form-control" formControlName="stateName">
-              </div>
-              
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Area</label>
-                <input type="text" class="form-control" formControlName="areaName">
-              </div>
-              
-              <div class="col-md-4 mb-3">
-                <label class="form-label">Account Number</label>
-                <input type="text" class="form-control" formControlName="accNo">
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Bank Name</label>
-                <input type="text" class="form-control" formControlName="bankName">
-              </div>
-              
-              <div class="col-md-6 mb-3">
-                <label class="form-label">IFSC Code</label>
-                <input type="text" class="form-control" formControlName="ifsc">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Alias">Alias</label>
+                <input type="text" id="Alias" formControlName="Alias" class="form-control" 
+                       placeholder="Optional short name">
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- Tax Information Section -->
-        <div class="section mb-4">
-          <h5 class="section-title">Tax Information</h5>
+          
           <div class="row">
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Tax Type</label>
-              <select class="form-select" formControlName="taxType">
-                <option value="Others">Others</option>
-                <option value="VAT">VAT</option>
-                <option value="CST">CST</option>
-                <option value="GST">GST</option>
-              </select>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="PrintName">Print Name</label>
+                <input type="text" id="PrintName" formControlName="PrintName" class="form-control" 
+                       placeholder="Name for printing documents">
+              </div>
             </div>
-            
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Type of Dealer GST</label>
-              <select class="form-select" formControlName="typeOfDealerGST">
-                <option value="Registered">Registered</option>
-                <option value="Unregistered">Unregistered</option>
-                <option value="Composite">Composite</option>
-                <option value="SEZ">SEZ</option>
-              </select>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="ParentGroup" class="required">Parent Group *</label>
+                <select id="ParentGroup" formControlName="ParentGroup" class="form-control">
+                  <option *ngFor="let group of parentGroups" [value]="group">{{group}}</option>
+                </select>
+              </div>
             </div>
-            
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Reverse Charge Type</label>
-              <select class="form-select" formControlName="reverseChargeType">
-                <option value="">Select</option>
-                <option value="Regular">Regular</option>
-                <option value="Reverse">Reverse</option>
-              </select>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="TaxType" class="required">Tax Type *</label>
+                <select id="TaxType" formControlName="TaxType" class="form-control">
+                  <option *ngFor="let tax of taxTypes" [value]="tax">{{tax}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="TypeOfDealerGST" class="required">Dealer GST Type *</label>
+                <select id="TypeOfDealerGST" formControlName="TypeOfDealerGST" class="form-control">
+                  <option *ngFor="let dealer of typeOfDealerGST" [value]="dealer">{{dealer}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-check">
+            <input type="checkbox" id="BillByBillBalancing" formControlName="BillByBillBalancing" 
+                   class="form-check-input">
+            <label for="BillByBillBalancing" class="form-check-label">Enable Bill-by-Bill Balancing</label>
+          </div>
+        </div>
+        
+        <!-- Section 2: Address Information -->
+        <div class="section mb-4" formGroupName="Address">
+          <h3 class="section-title">Address Information</h3>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="Address1" class="required">Address Line 1 *</label>
+                <input type="text" id="Address1" formControlName="Address1" class="form-control" 
+                       placeholder="Street address, P.O. Box">
+                <div *ngIf="addressInfo['Address1'].invalid && addressInfo['Address1'].touched" 
+                     class="text-danger small">
+                  Address line 1 is required
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Address2">Address Line 2</label>
+                <input type="text" id="Address2" formControlName="Address2" class="form-control" 
+                       placeholder="Apartment, suite, unit, building, floor">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Address3">Address Line 3</label>
+                <input type="text" id="Address3" formControlName="Address3" class="form-control" 
+                       placeholder="City, State, ZIP">
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="CityName" class="required">City *</label>
+                <input type="text" id="CityName" formControlName="CityName" class="form-control" 
+                       placeholder="City name">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="StateName">State</label>
+                <input type="text" id="StateName" formControlName="StateName" class="form-control" 
+                       value="Rajasthan" readonly>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="PINCode" class="required">PIN Code *</label>
+                <input type="text" id="PINCode" formControlName="PINCode" class="form-control" 
+                       placeholder="6-digit PIN code" maxlength="6">
+                <div *ngIf="addressInfo['PINCode'].invalid && addressInfo['PINCode'].touched" 
+                     class="text-danger small">
+                  Valid 6-digit PIN code required
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="CountryName">Country</label>
+                <input type="text" id="CountryName" formControlName="CountryName" class="form-control" 
+                       value="India" readonly>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Contact" class="required">Contact Person *</label>
+                <input type="text" id="Contact" formControlName="Contact" class="form-control" 
+                       placeholder="Name of contact person">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Mobile">Mobile Number</label>
+                <input type="text" id="Mobile" formControlName="Mobile" class="form-control" 
+                       placeholder="10-digit mobile number" maxlength="10">
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Email">Email Address</label>
+                <input type="email" id="Email" formControlName="Email" class="form-control" 
+                       placeholder="email@example.com">
+                <div *ngIf="addressInfo['Email'].invalid && addressInfo['Email'].touched" 
+                     class="text-danger small">
+                  Please enter a valid email address
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="ITPAN" class="required">PAN Number *</label>
+                <input type="text" id="ITPAN" formControlName="ITPAN" class="form-control" 
+                       placeholder="AAAAA9999A" (blur)="validateGST()">
+                <div *ngIf="addressInfo['ITPAN'].invalid && addressInfo['ITPAN'].touched" 
+                     class="text-danger small">
+                  Valid PAN required (Format: ABCDE1234F)
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="GSTNo">GST Number</label>
+                <input type="text" id="GSTNo" formControlName="GSTNo" class="form-control" 
+                       placeholder="22ABCDE1234F1Z5" (blur)="validateGST()">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="WhatsAppNo">WhatsApp Number</label>
+                <input type="text" id="WhatsAppNo" formControlName="WhatsAppNo" class="form-control" 
+                       placeholder="Optional WhatsApp number">
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- Buttons -->
-        <div class="d-flex justify-content-between">
+        
+        <!-- Section 3: Additional Information -->
+        <div class="section mb-4">
+          <h3 class="section-title">Additional Information</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="SupplierType">Supplier Type</label>
+                <select id="SupplierType" formControlName="SupplierType" class="form-control">
+                  <option value="1">Type 1</option>
+                  <option value="2">Type 2</option>
+                  <option value="3">Type 3</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="ReverseChargeType">Reverse Charge Type</label>
+                <select id="ReverseChargeType" formControlName="ReverseChargeType" class="form-control">
+                  <option *ngFor="let type of reverseChargeTypes" [value]="type">{{type}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="InputType">Input Type</label>
+                <select id="InputType" formControlName="InputType" class="form-control">
+                  <option *ngFor="let type of inputTypes" [value]="type">{{type}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="GSTReturnFilingPeriod">GST Return Period</label>
+                <select id="GSTReturnFilingPeriod" formControlName="GSTReturnFilingPeriod" class="form-control">
+                  <option *ngFor="let period of gstReturnPeriods" [value]="period.value">
+                    {{period.label}}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="ChequePrintName">Cheque Print Name</label>
+                <input type="text" id="ChequePrintName" formControlName="ChequePrintName" class="form-control" 
+                       placeholder="Name as it appears on cheque">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="PriceLevel">Price Level</label>
+                <input type="text" id="PriceLevel" formControlName="PriceLevel" class="form-control" 
+                       value="@" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Form Actions -->
+        <div class="form-actions d-flex justify-content-between">
           <div>
-            <button type="submit" class="btn btn-primary me-2" 
-                    [disabled]="isSubmitting || accountForm.invalid">
-              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
-              {{ isSubmitting ? 'Creating...' : 'Create Account' }}
+            <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="isSubmitting">
+              Cancel
             </button>
-            <button type="button" class="btn btn-secondary me-2" 
-                    (click)="onReset()" [disabled]="isSubmitting">
-              Reset
+            <button type="button" class="btn btn-outline-secondary ml-2" (click)="resetForm()" 
+                    [disabled]="isSubmitting">
+              Reset Form
             </button>
           </div>
           
-          <button type="button" class="btn btn-outline-primary" 
-                  (click)="navigateToModify()">
-            Go to Modify Account
+          <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || accountForm.invalid">
+            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm mr-2"></span>
+            {{ isSubmitting ? 'Creating Account...' : 'Create Account' }}
           </button>
         </div>
       </form>
+    </div>
+    
+    <div class="card-footer text-muted">
+      <small>Note: Service Code 5 will be used for creating new account. Make sure all required fields are filled.</small>
     </div>
   </div>
 </div>
