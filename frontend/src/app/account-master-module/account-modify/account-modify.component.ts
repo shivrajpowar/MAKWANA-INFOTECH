@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountMasterService } from '../../services/account-master.service';
 
@@ -14,276 +13,353 @@ import { AccountMasterService } from '../../services/account-master.service';
 })
 export class AccountModifyComponent implements OnInit {
   accountForm!: FormGroup;
-  isSubmitting = false;
-  isLoading = false;
-  isTestingApi = false;
-  successMessage = '';
-  errorMessage = '';
-  infoMessage = '';
-  masterCode = '';
-  isEditing = false;
-  rawXmlData = '';
-  apiTestResult: any = null;
+  masterCode: string = '';
+  isLoading: boolean = false;
+  isUpdating: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
+  originalData: any = null;
   
-  parentGroups = [
-    'Sundry Debtors',
-    'Sundry Creditors',
-    'Bank Accounts',
-    'Cash-in-hand',
-    'Direct Expenses',
-    'Indirect Expenses',
-    'Direct Income',
-    'Indirect Income'
-  ];
-
-  supplierTypes = [
-    { value: '1', label: 'Supplier Type 1' },
-    { value: '2', label: 'Supplier Type 2' },
-    { value: '3', label: 'Supplier Type 3' }
-  ];
-
-  reverseChargeTypes = [
-    'Not Applicable',
-    'Regular',
-    'Reverse'
-  ];
-
-  inputTypes = [
-    'Section 17(5)-ITC None',
-    'Section 17(5)-ITC Allowed',
-    'Others'
-  ];
-
-  gstReturnPeriods = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5'
-  ];
+  // New form for master code input
+  masterCodeForm!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private accountService: AccountMasterService,
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    private accountService: AccountMasterService
+  ) {
+    this.initializeForms();
+  }
+
+  // ngOnInit(): void {
+  //   // Check route parameters
+  //   this.route.params.subscribe(params => {
+  //     if (params['masterCode']) {
+  //       this.masterCode = params['masterCode'];
+  //       this.masterCodeForm.patchValue({ masterCode: this.masterCode });
+  //       this.loadAccountData();
+  //     }
+  //   });
+
+  //   // Check query parameters
+  //   this.route.queryParams.subscribe(params => {
+  //     if (params['masterCode']) {
+  //       this.masterCode = params['masterCode'];
+  //       this.masterCodeForm.patchValue({ masterCode: this.masterCode });
+  //       this.loadAccountData();
+  //     }
+  //   });
+  // }
 
   ngOnInit(): void {
-    this.initForm();
-    
-    // Check if masterCode is provided in query params
-    this.route.queryParams.subscribe(params => {
-      if (params['masterCode']) {
-        this.masterCode = params['masterCode'];
-        this.fetchAccountDetails(this.masterCode);
-      }
-    });
-  }
+  // Existing route params logic
+  this.route.params.subscribe(params => {
+    if (params['masterCode']) {
+      this.masterCode = params['masterCode'];
+      this.masterCodeForm.patchValue({ masterCode: this.masterCode });
+      this.loadAccountData();
+    }
+  });
 
-  private initForm(): void {
+  this.route.queryParams.subscribe(params => {
+    if (params['masterCode']) {
+      this.masterCode = params['masterCode'];
+      this.masterCodeForm.patchValue({ masterCode: this.masterCode });
+      this.loadAccountData();
+    }
+  });
+
+  // ✅ AUTO-FILL PrintName FROM Name
+  const nameCtrl = this.accountForm.get('Name');
+  const printCtrl = this.accountForm.get('PrintName');
+
+  nameCtrl?.valueChanges.subscribe(value => {
+    // Only auto-fill if user has not manually edited PrintName
+    if (!printCtrl?.dirty) {
+      printCtrl?.setValue(value, { emitEvent: false });
+    }
+  });
+}
+
+
+  private initializeForms(): void {
+    // Master Code Form
+    this.masterCodeForm = this.fb.group({
+      masterCode: ['', [Validators.required, Validators.pattern('^[0-9]+$')]]
+    });
+
+    // Account Form
     this.accountForm = this.fb.group({
-      /* Account Details */
-      name: ['', [Validators.required, Validators.maxLength(100)]],
-      alias: ['', Validators.maxLength(50)],
-      printName: ['', Validators.maxLength(100)],
-      parentGroup: ['Sundry Debtors', Validators.required],
-      billByBillBalancing: [false],
-
-      /* Address Details */
-      address: this.fb.group({
-        address1: ['', Validators.maxLength(100)],
-        address2: ['', Validators.maxLength(100)],
-        address3: ['', Validators.maxLength(100)],
-        email: ['', Validators.email],
-        mobile: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-        whatsappNo: ['', Validators.pattern(/^[0-9]{10,12}$/)],
-        itpan: ['', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)]],
-        contact: ['', Validators.maxLength(50)],
-        gstNo: ['', [Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)]],
-        countryName: ['India'],
-        stateName: ['', Validators.maxLength(50)],
-        cityName: ['', Validators.maxLength(50)],
-        regionName: ['', Validators.maxLength(50)],
-        areaName: ['', Validators.maxLength(50)],
-        contDeptName: ['', Validators.maxLength(50)],
-        pincode: ['', Validators.pattern(/^[0-9]{6}$/)],
-        station: ['', Validators.maxLength(50)],
-        accNo: ['', Validators.maxLength(20)],
-        bankName: ['', Validators.maxLength(50)],
-        ifsc: ['', Validators.pattern(/^[A-Z]{4}0[A-Z0-9]{6}$/)]
-      }),
-
-      /* Tax & Other Info */
-      taxType: ['Others'],
-      typeOfDealerGST: ['Registered'],
-      chequePrintName: ['', Validators.maxLength(100)],
-      supplierType: ['1'],
-      priceLevel: ['@'],
-      priceLevelForPurc: ['@'],
-      reverseChargeType: ['Not Applicable'],
-      inputType: ['Section 17(5)-ITC None'],
-      gstReturnFilingPeriod: ['1'],
+      // Basic Information
+      Name: ['', Validators.required],
+      Alias: [''],
+      PrintName: [''],
+      ParentGroup: [''],
+      BillByBillBalancing: [''],
       
-      /* Hidden fields */
+      // Address Information
+      Address: this.fb.group({
+        Address1: [''],
+        Address2: [''],
+        Address3: [''],
+        Email: ['', [Validators.email]],
+        Mobile: ['', [Validators.pattern('^[0-9]{10}$')]],
+        WhatsAppNo: [''],
+        ITPAN: [''],
+        Contact: [''],
+        GSTNo: [''],
+        OF: [''],
+        CountryName: [''],
+        StateName: [''],
+        CityName: [''],
+        RegionName: [''],
+        AreaName: [''],
+        ContDeptName: [''],
+        PINCode: [''],
+        Station: [''],
+        AccNo: [''],
+        TmpMasterCode: [''],
+        C4: [''],
+        C5: ['']
+      }),
+      
+      // Additional Information
+      SupplierType: [''],
+      PriceLevel: [''],
+      PriceLevelForPurc: [''],
+      TaxType: [''],
+      TypeOfDealerGST: [''],
       tmpCode: [''],
-      tmpParentGrpCode: ['']
-    });
-
-    // Disable form initially until account is loaded
-    this.accountForm.disable();
-  }
-
-  fetchAccountDetails(masterCode: string): void {
-    this.isLoading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-    this.infoMessage = '';
-    this.apiTestResult = null;
-    
-    console.log('Fetching account details for:', masterCode);
-    this.infoMessage = `Fetching account with MasterCode: ${masterCode}...`;
-    
-    // First test API connection
-    this.testApiConnection(masterCode);
-    
-    // Then get parsed account data
-    this.accountService.getAccountByCode(masterCode).subscribe({
-      next: (account) => {
-        this.isLoading = false;
-        this.isEditing = true;
-        
-        console.log('Fetched Account:', account);
-        
-        // Map API response to form structure
-        const formData = this.accountService.mapApiToForm(account);
-        console.log('Form Data to Patch:', formData);
-        
-        // Update form with fetched data
-        this.accountForm.patchValue(formData);
-        this.accountForm.enable();
-        
-        this.successMessage = `Account "${account.Name}" loaded successfully!`;
-        this.infoMessage = `Master Code: ${account.tmpCode || masterCode}`;
-        
-        // Clear success message after 5 seconds
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 5000);
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.errorMessage = error.message || 'Failed to fetch account details.';
-        console.error('Error fetching account:', error);
-        
-        // Show API test result if available
-        if (this.apiTestResult) {
-          this.infoMessage = `API Test: Status ${this.apiTestResult.status} - ${this.apiTestResult.statusText}`;
-        }
-      }
+      tmpParentGrpCode: [''],
+      ChequePrintName: [''],
+      ReverseChargeType: [''],
+      InputType: [''],
+      GSTReturnFilingPeriod: ['']
     });
   }
 
-  testApiConnection(masterCode: string): void {
-    this.isTestingApi = true;
-    this.accountService.testApiConnection(masterCode).subscribe({
-      next: (result) => {
-        this.isTestingApi = false;
-        this.apiTestResult = result;
-        console.log('API Test Result:', result);
-      },
-      error: (error) => {
-        this.isTestingApi = false;
-        console.error('API Test Error:', error);
-      }
-    });
+  onMasterCodeSubmit(): void {
+    if (this.masterCodeForm.invalid) {
+      this.masterCodeForm.get('masterCode')?.markAsTouched();
+      return;
+    }
+
+    const newMasterCode = this.masterCodeForm.get('masterCode')?.value;
+    if (newMasterCode && newMasterCode !== this.masterCode) {
+      this.masterCode = newMasterCode;
+      
+      // Update URL without reloading page
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { masterCode: this.masterCode },
+        queryParamsHandling: 'merge'
+      });
+      
+      this.loadAccountData();
+    }
   }
 
-  onSearch(): void {
-    const inputElement = document.getElementById('searchMasterCode') as HTMLInputElement;
-    const masterCode = inputElement?.value;
-    
-    if (!masterCode || !masterCode.trim()) {
-      this.errorMessage = 'Please enter a Master Code to search.';
-      return;
-    }
-    
-    if (!/^\d+$/.test(masterCode.trim())) {
-      this.errorMessage = 'Master Code should contain only numbers.';
-      return;
-    }
-    
-    this.masterCode = masterCode.trim();
-    this.fetchAccountDetails(this.masterCode);
-  }
-
-  onSearchWithHeadersInfo(): void {
-    const inputElement = document.getElementById('searchMasterCode') as HTMLInputElement;
-    const masterCode = inputElement?.value;
-    
-    if (!masterCode || !masterCode.trim()) {
-      this.errorMessage = 'Please enter a Master Code to search.';
-      return;
-    }
-    
-    this.masterCode = masterCode.trim();
-    
-    // Show header information
-    this.infoMessage = `Request Headers: SC=9, MasterCode=${this.masterCode}, UserName=m, Pwd=m`;
-    
-    // Fetch after showing info
-    setTimeout(() => {
-      this.fetchAccountDetails(this.masterCode);
-    }, 1000);
-  }
-
-  onSubmit(): void {
-    if (this.accountForm.invalid) {
-      this.markFormGroupTouched(this.accountForm);
-      this.errorMessage = 'Please fill all required fields correctly.';
-      return;
-    }
-
+  loadAccountData(): void {
     if (!this.masterCode) {
-      this.errorMessage = 'Master Code is required for updating account.';
+      this.errorMessage = 'Master Code is required';
       return;
     }
 
-    this.isSubmitting = true;
-    this.errorMessage = '';
+    this.isLoading = true;
     this.successMessage = '';
-    this.infoMessage = `Updating account with MasterCode: ${this.masterCode}...`;
-
-    const formData = this.accountForm.value;
-    console.log('Form Data for Update:', formData);
+    this.errorMessage = '';
+    this.originalData = null;
     
-    const apiData = this.accountService.mapFormToApi(formData);
-    console.log('API Data for Update:', apiData);
+    // Reset form
+    this.accountForm.reset();
+    this.initializeForms();
+    this.masterCodeForm.patchValue({ masterCode: this.masterCode });
 
-    this.accountService.updateAccount(this.masterCode, apiData).subscribe({
-      next: (response) => {
-        this.isSubmitting = false;
-        console.log('Account updated successfully:', response);
-        this.successMessage = 'Account updated successfully!';
-        this.infoMessage = '';
-        
-        // Refresh the data
-        setTimeout(() => {
-          this.fetchAccountDetails(this.masterCode);
-        }, 2000);
+    this.accountService.getMasterXML(this.masterCode).subscribe({
+      next: (xmlResponse) => {
+        try {
+          const accountData = this.parseXMLResponse(xmlResponse);
+          if (accountData && Object.keys(accountData).length > 0) {
+            this.originalData = JSON.parse(JSON.stringify(accountData));
+            this.populateForm(accountData);
+          } else {
+            this.errorMessage = 'No account found for this master code';
+            this.accountForm.disable();
+          }
+          this.isLoading = false;
+        } catch (error) {
+          this.errorMessage = 'Error parsing response data';
+          this.isLoading = false;
+          console.error('Parse error:', error);
+        }
       },
       error: (error) => {
-        this.isSubmitting = false;
-        console.error('Error updating account:', error);
-        this.errorMessage = error.message || 'Failed to update account. Please try again.';
-        this.infoMessage = '';
+        this.errorMessage = 'Failed to load account data. Please check the master code.';
+        this.isLoading = false;
+        this.accountForm.disable();
+        console.error('Load error:', error);
       }
     });
   }
+
+  private parseXMLResponse(xmlString: string): any {
+    try {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+      const accountElement = xmlDoc.getElementsByTagName('Account')[0];
+      
+      if (!accountElement) return null;
+      
+      const result: any = {};
+      
+      // Parse simple elements
+      const simpleElements = [
+        'Name', 'Alias', 'PrintName', 'ParentGroup', 'BillByBillBalancing',
+        'SupplierType', 'PriceLevel', 'PriceLevelForPurc', 'TaxType', 
+        'TypeOfDealerGST', 'tmpCode', 'tmpParentGrpCode', 'ChequePrintName',
+        'ReverseChargeType', 'InputType', 'GSTReturnFilingPeriod'
+      ];
+      
+      simpleElements.forEach(elementName => {
+        const element = accountElement.getElementsByTagName(elementName)[0];
+        if (element) {
+          result[elementName] = element.textContent || '';
+        }
+      });
+      
+      // Parse Address
+      const addressElement = accountElement.getElementsByTagName('Address')[0];
+      if (addressElement) {
+        result.Address = {};
+        const addressElements = [
+          'Address1', 'Address2', 'Address3', 'Email', 'Mobile', 'WhatsAppNo',
+          'ITPAN', 'Contact', 'GSTNo', 'OF', 'CountryName', 'StateName',
+          'CityName', 'RegionName', 'AreaName', 'ContDeptName', 'PINCode',
+          'Station', 'AccNo', 'TmpMasterCode', 'C4', 'C5'
+        ];
+        
+        addressElements.forEach(elementName => {
+          const element = addressElement.getElementsByTagName(elementName)[0];
+          if (element) {
+            result.Address[elementName] = element.textContent || '';
+          }
+        });
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('XML parsing error:', error);
+      return null;
+    }
+  }
+
+  private populateForm(data: any): void {
+    if (!data) return;
+
+    // Enable form
+    this.accountForm.enable();
+
+    // Set basic fields
+    this.accountForm.patchValue({
+      Name: data.Name || '',
+      Alias: data.Alias || '',
+      PrintName: data.PrintName || '',
+      ParentGroup: data.ParentGroup || '',
+      BillByBillBalancing: data.BillByBillBalancing || '',
+      SupplierType: data.SupplierType || '',
+      PriceLevel: data.PriceLevel || '',
+      PriceLevelForPurc: data.PriceLevelForPurc || '',
+      TaxType: data.TaxType || '',
+      TypeOfDealerGST: data.TypeOfDealerGST || '',
+      tmpCode: data.tmpCode || '',
+      tmpParentGrpCode: data.tmpParentGrpCode || '',
+      ChequePrintName: data.ChequePrintName || '',
+      ReverseChargeType: data.ReverseChargeType || '',
+      InputType: data.InputType || '',
+      GSTReturnFilingPeriod: data.GSTReturnFilingPeriod || ''
+    });
+
+    // Set address fields
+    if (data.Address) {
+      (this.accountForm.get('Address') as FormGroup).patchValue(data.Address);
+    }
+  }
+onSubmit(): void {
+  if (this.accountForm.invalid) {
+    this.markFormGroupTouched(this.accountForm);
+    return;
+  }
+
+  this.isUpdating = true;
+  this.successMessage = '';
+  this.errorMessage = '';
+
+  const formData = this.accountForm.value;
+  
+  // Ensure the master code is included
+  formData.tmpCode = this.masterCode;
+  if (formData.Address) {
+    formData.Address.TmpMasterCode = this.masterCode;
+  }
+
+  // Call the update method from service
+  this.accountService.updateMasterXML(this.masterCode, formData).subscribe({
+    next: (response) => {
+      try {
+        // Parse the response to check if it was successful
+        console.log('Update response:', response);
+        
+        // Use the component's own parseXMLResponse method
+        if (response && response.includes('<Account>')) {
+          this.successMessage = 'Account updated successfully!';
+          
+          // Use component's parseXMLResponse method (not service method)
+          const updatedData = this.parseXMLResponse(response);
+          if (updatedData) {
+            this.originalData = updatedData;
+          } else {
+            this.originalData = JSON.parse(JSON.stringify(formData));
+          }
+        } else {
+          // Even if response doesn't contain XML, consider it successful if no error
+          this.successMessage = 'Account updated successfully!';
+          this.originalData = JSON.parse(JSON.stringify(formData));
+        }
+      } catch (error) {
+        this.successMessage = 'Account updated successfully!';
+        this.originalData = JSON.parse(JSON.stringify(formData));
+      }
+      
+      this.isUpdating = false;
+      
+      // Reload updated data after 1 second
+      setTimeout(() => {
+        this.loadAccountData();
+      }, 1000);
+    },
+    error: (error) => {
+      this.errorMessage = 'Failed to update account. Please try again.';
+      this.isUpdating = false;
+      console.error('Update error:', error);
+      
+      // Show more specific error message if available
+      if (error.status === 400) {
+        this.errorMessage = 'Invalid data format. Please check your inputs.';
+      } else if (error.status === 404) {
+        this.errorMessage = 'Account not found. The master code may be invalid.';
+      } else if (error.status === 500) {
+        this.errorMessage = 'Server error. Please try again later.';
+      }
+    }
+  });
+}
 
   onReset(): void {
-    if (this.isEditing && confirm('Are you sure you want to reset the form? All changes will be lost.')) {
-      this.fetchAccountDetails(this.masterCode);
+    if (this.originalData) {
+      this.populateForm(this.originalData);
+      this.successMessage = '';
+      this.errorMessage = '';
     }
   }
 
@@ -296,57 +372,20 @@ export class AccountModifyComponent implements OnInit {
     });
   }
 
+  // Helper methods
+  isMasterCodeInvalid(): boolean {
+    const control = this.masterCodeForm.get('masterCode');
+    return control ? control.invalid && control.touched : false;
+  }
+
   isFieldInvalid(fieldName: string): boolean {
     const field = this.accountForm.get(fieldName);
-    return !!(field && field.invalid && field.touched);
+    return field ? field.invalid && field.touched : false;
   }
 
-  isFieldInvalidInGroup(groupName: string, fieldName: string): boolean {
-    const group = this.accountForm.get(groupName) as FormGroup;
-    const field = group?.get(fieldName);
-    return !!(field && field.invalid && field.touched);
-  }
-
-  navigateToAdd(): void {
-    this.router.navigate(['/accounts/add']);
-  }
-
-  clearForm(): void {
-    this.accountForm.reset({
-      parentGroup: 'Sundry Debtors',
-      billByBillBalancing: false,
-      address: {
-        countryName: 'India'
-      },
-      taxType: 'Others',
-      typeOfDealerGST: 'Registered',
-      supplierType: '1',
-      priceLevel: '@',
-      priceLevelForPurc: '@',
-      reverseChargeType: 'Not Applicable',
-      inputType: 'Section 17(5)-ITC None',
-      gstReturnFilingPeriod: '1'
-    });
-    this.masterCode = '';
-    this.isEditing = false;
-    this.accountForm.disable();
-    this.errorMessage = '';
-    this.successMessage = '';
-    this.infoMessage = '';
-    this.apiTestResult = null;
-    
-    // Clear search input
-    const searchInput = document.getElementById('searchMasterCode') as HTMLInputElement;
-    if (searchInput) {
-      searchInput.value = '';
-    }
-  }
-
-  getDefaultHeadersInfo(): string {
-    return `Default Headers: SC=9, UserName=m, Pwd=m\nDynamic Header: MasterCode=${this.masterCode || '[Enter Code]'}`;
-  }
-
-  showHeadersInfo(): void {
-    alert(this.getDefaultHeadersInfo());
-  }
+  // Getters for template
+  get masterCodeControl() { return this.masterCodeForm.get('masterCode'); }
+  get name() { return this.accountForm.get('Name'); }
+  get email() { return this.accountForm.get('Address.Email'); }
+  get mobile() { return this.accountForm.get('Address.Mobile'); }
 }

@@ -1,480 +1,276 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-
-export interface Account {
-  Name: string;
-  Alias: string;
-  PrintName: string;
-  ParentGroup: string;
-  BillByBillBalancing: boolean;
-  Address: {
-    Address1: string;
-    Address2: string;
-    Address3?: string;
-    Email?: string;
-    Mobile: string;
-    WhatsAppNo: string;
-    ITPAN: string;
-    Contact?: string;
-    GSTNo: string;
-    CountryName: string;
-    StateName: string;
-    CityName?: string;
-    RegionName?: string;
-    AreaName?: string;
-    ContDeptName?: string;
-    PINCode?: string;
-    Station?: string;
-    AccNo: string;
-    TmpMasterCode?: string;
-    C4?: string;
-    C5?: string;
-  };
-  SupplierType?: string;
-  PriceLevel?: string;
-  PriceLevelForPurc?: string;
-  TaxType: string;
-  TypeOfDealerGST: string;
-  tmpCode?: string;
-  tmpParentGrpCode?: string;
-  ChequePrintName: string;
-  ReverseChargeType?: string;
-  InputType?: string;
-  GSTReturnFilingPeriod?: string;
-}
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountMasterService {
-  // Use proxy URLs
-  private baseUrl = '/api-proxy';  // This will route through proxy
-  private accountApiUrl = '/api/accounts'; // For POST/PUT operations
+  private apiUrl = '/api-proxy/'; // Your proxy URL
   
-  // Default headers as per your screenshot (without Accept to avoid duplication)
-  private defaultHeaders = {
-    'SC': '9',
-    'UserName': 'm',
-    'Pwd': 'm'
-  };
-
   constructor(private http: HttpClient) { }
-
-  // Helper to convert object to XML string
-  private convertToXML(data: any, rootElement: string = 'Account'): string {
-    const escapeXml = (unsafe: string) => {
-      if (!unsafe) return '';
-      return unsafe.toString()
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&apos;');
-    };
-
-    const buildXml = (obj: any, nodeName: string): string => {
-      let xml = '';
-      if (obj === null || obj === undefined) return xml;
-      
-      if (Array.isArray(obj)) {
-        obj.forEach(item => {
-          xml += buildXml(item, nodeName);
-        });
-      } else if (typeof obj === 'object') {
-        xml += `<${nodeName}>`;
-        for (const [key, value] of Object.entries(obj)) {
-          xml += buildXml(value, key);
-        }
-        xml += `</${nodeName}>`;
-      } else {
-        xml += `<${nodeName}>${escapeXml(obj.toString())}</${nodeName}>`;
-      }
-      return xml;
-    };
-
-    return `<?xml version="1.0" encoding="UTF-8"?><${rootElement}>${buildXml(data, rootElement)}</${rootElement}>`;
-  }
-
-  // Improved XML parser
-  private parseXML(xmlString: string): any {
-    try {
-      // Clean the XML string - remove any HTML tags or doctype
-      const cleanXml = xmlString.replace(/<!DOCTYPE[^>[]*(\[[^]]*\])?>/g, '')
-                               .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-                               .replace(/<html[^>]*>.*?<\/html>/gis, '')
-                               .replace(/<head>.*?<\/head>/gis, '')
-                               .replace(/<body>.*?<\/body>/gis, '')
-                               .trim();
-      
-      // Find the actual XML content
-      const xmlMatch = cleanXml.match(/<\?xml.*?\?>.*$/s);
-      const xmlToParse = xmlMatch ? xmlMatch[0] : cleanXml;
-      
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(xmlToParse, 'text/xml');
-      
-      // Check for parse errors
-      const parseError = xmlDoc.getElementsByTagName('parsererror');
-      if (parseError.length > 0) {
-        console.error('XML Parse Error:', parseError[0].textContent);
-        console.error('XML String:', xmlToParse.substring(0, 500));
-        return null;
-      }
-      
-      return this.xmlToObject(xmlDoc.documentElement);
-    } catch (error) {
-      console.error('Error parsing XML:', error);
-      console.error('XML String that failed:', xmlString.substring(0, 500));
-      return null;
-    }
-  }
-
-  private xmlToObject(xml: any): any {
-    let obj: any = {};
-    
-    // Handle text content
-    if (xml.nodeType === 3) {
-      return xml.nodeValue;
-    }
-    
-    // Handle element nodes
-    if (xml.nodeType === 1) {
-      const nodeName = xml.nodeName;
-      
-      // If it's the root Account element, process children
-      if (xml.hasChildNodes()) {
-        const childNodes = xml.childNodes;
-        for (let i = 0; i < childNodes.length; i++) {
-          const child = childNodes[i];
-          const childName = child.nodeName;
-          
-          // Skip text nodes that only contain whitespace
-          if (childName === '#text') {
-            const text = child.nodeValue?.trim();
-            if (text) {
-              obj = text;
-            }
-            continue;
-          }
-          
-          const childObj = this.xmlToObject(child);
-          
-          if (typeof obj[childName] === 'undefined') {
-            obj[childName] = childObj;
-          } else {
-            // Convert to array if multiple elements with same name
-            if (!Array.isArray(obj[childName])) {
-              obj[childName] = [obj[childName]];
-            }
-            obj[childName].push(childObj);
-          }
-        }
-      }
-      
-      // Handle leaf nodes (no children or only text)
-      if (xml.childNodes.length === 1 && xml.childNodes[0].nodeType === 3) {
-        return xml.childNodes[0].nodeValue || '';
-      }
-    }
-    
-    return obj;
-  }
-
-  // Main method to get account by code
-  getAccountByCode(masterCode: string): Observable<Account> {
-    console.log(`Fetching account ${masterCode} through proxy`);
-    
-    // Create headers with dynamic MasterCode - FIXED: Accept header only once
+  
+  // Get single account by master code (Service Code 9)
+  getMasterXML(masterCode: string): Observable<any> {
     const headers = new HttpHeaders({
-      ...this.defaultHeaders,
+      'SC': '9',
       'MasterCode': masterCode,
-      'Accept': 'application/xml'  // Add Accept here instead of in defaultHeaders
+      'UserName': 'm',
+      'Pwd': 'm'
     });
 
-    return this.http.get(this.baseUrl, { 
+    return this.http.get(this.apiUrl, { 
       headers, 
-      responseType: 'text'
-    }).pipe(
-      map((response: string) => {
-        console.log('Raw Response from Proxy:', response.substring(0, 500));
-        
-        // Check if response is HTML (proxy error)
-        if (response.includes('<!doctype html>') || response.includes('<html')) {
-          throw new Error('Proxy error: Received HTML instead of XML. Check proxy configuration.');
-        }
-        
-        const parsed = this.parseXML(response);
-        console.log('Parsed XML:', parsed);
-        
-        if (!parsed || !parsed.Account) {
-          throw new Error('Invalid XML response or account not found');
-        }
-        
-        return this.mapApiToAccount(parsed.Account);
-      }),
-      catchError(error => {
-        console.error('Error fetching account:', error);
-        return throwError(() => new Error(error.message || 'Failed to fetch account'));
-      })
-    );
+      responseType: 'text' 
+    });
   }
 
-  // Test API connection through proxy
-  // In account-master.service.ts, update the testApiConnection method:
-testApiConnection(masterCode: string): Observable<any> {
-  // Use query parameters instead of headers
-  const params = new HttpParams()
-    .set('SC', '9')
-    .set('MasterCode', masterCode)
-    .set('UserName', 'm')
-    .set('Pwd', 'm');
-
-  console.log('Testing with params:', params.toString());
-
-  return this.http.get(this.baseUrl, { 
-    params, 
-    responseType: 'text',
-    headers: { 'Accept': 'application/xml' }  // Keep Accept as header
-  }).pipe(
-    map(response => {
-      return {
-        method: 'Proxy Connection with Query Params',
-        status: 'Success',
-        responsePreview: response.substring(0, 200) + '...',
-        isHtml: response.includes('<!doctype html>') || response.includes('<html'),
-        length: response.length,
-        rawResponse: response
-      };
-    }),
-    catchError(error => {
-      console.error('API Connection Error:', error);
-      return throwError(() => new Error('API Connection Failed: ' + error.message));
-    })
-  );
-}
-
-  // Update existing account - FIXED: No duplicate Accept header
-  updateAccount(masterCode: string, accountData: Account): Observable<any> {
-    const xmlData = this.convertToXML(accountData);
-    console.log('Updating Account XML:', xmlData);
+  // Create new account (Service Code 5 - Add Master from XML)
+  createMasterXML(accountData: any): Observable<any> {
+    // Convert the account data to XML format
+    const xmlData = this.convertAccountToXML(accountData);
     
     const headers = new HttpHeaders({
-      'Content-Type': 'application/xml',
-      'Accept': 'application/xml',
-      ...this.defaultHeaders,
-      'MasterCode': masterCode
+      'SC': '5', // Service code 5 for Add Master
+      'MasterType': '2', // 2 denotes Account master
+      'MasterXml': xmlData, // XML data in header
+      'UserName': 'm',
+      'Pwd': 'm'
     });
 
-    return this.http.put(`${this.accountApiUrl}/update`, xmlData, {
-      headers,
-      responseType: 'text'
-    }).pipe(
-      map(response => {
-        console.log('Update Response:', response);
-        return this.parseXML(response);
-      }),
-      catchError(error => {
-        console.error('Error updating account:', error);
-        return throwError(() => new Error(error.message || 'Failed to update account'));
-      })
-    );
-  }
-
-  // Create new account - FIXED: No duplicate Accept header
-  createAccount(accountData: Account): Observable<any> {
-    const xmlData = this.convertToXML(accountData);
-    console.log('Creating Account XML:', xmlData);
-    
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/xml',
-      'Accept': 'application/xml',
-      ...this.defaultHeaders
-    });
-
-    return this.http.post(`${this.accountApiUrl}/create`, xmlData, {
-      headers,
-      responseType: 'text'
-    }).pipe(
-      map(response => {
-        console.log('Create Response:', response);
-        return this.parseXML(response);
-      }),
-      catchError(error => {
-        console.error('Error creating account:', error);
-        return throwError(() => new Error(error.message || 'Failed to create account'));
-      })
-    );
-  }
-
-  // Enhanced mapping from API to form data
-  mapApiToAccount(apiData: any): Account {
-    console.log('Mapping API Data:', apiData);
-    
-    return {
-      Name: apiData.Name || '',
-      Alias: apiData.Alias || '',
-      PrintName: apiData.PrintName || '',
-      ParentGroup: apiData.ParentGroup || '',
-      BillByBillBalancing: apiData.BillByBillBalancing === 'True' || apiData.BillByBillBalancing === true,
-      Address: {
-        Address1: apiData.Address?.Address1 || '',
-        Address2: apiData.Address?.Address2 || '',
-        Address3: apiData.Address?.Address3 || '',
-        Email: apiData.Address?.Email || '',
-        Mobile: apiData.Address?.Mobile || '',
-        WhatsAppNo: apiData.Address?.WhatsAppNo || '',
-        ITPAN: apiData.Address?.ITPAN || '',
-        Contact: apiData.Address?.Contact || '',
-        GSTNo: apiData.Address?.GSTNo || '',
-        CountryName: apiData.Address?.CountryName || '',
-        StateName: apiData.Address?.StateName || '',
-        CityName: apiData.Address?.CityName || '',
-        RegionName: apiData.Address?.RegionName || '',
-        AreaName: apiData.Address?.AreaName || '',
-        ContDeptName: apiData.Address?.ContDeptName || '',
-        PINCode: apiData.Address?.PINCode || '',
-        Station: apiData.Address?.Station || '',
-        AccNo: apiData.Address?.AccNo || '',
-        TmpMasterCode: apiData.Address?.TmpMasterCode || '',
-        C4: apiData.Address?.C4 || '',
-        C5: apiData.Address?.C5 || ''
-      },
-      SupplierType: apiData.SupplierType || '',
-      PriceLevel: apiData.PriceLevel || '',
-      PriceLevelForPurc: apiData.PriceLevelForPurc || '',
-      TaxType: apiData.TaxType || '',
-      TypeOfDealerGST: apiData.TypeOfDealerGST || '',
-      tmpCode: apiData.tmpCode || apiData.Address?.TmpMasterCode || '',
-      tmpParentGrpCode: apiData.tmpParentGrpCode || '',
-      ChequePrintName: apiData.ChequePrintName || '',
-      ReverseChargeType: apiData.ReverseChargeType || '',
-      InputType: apiData.InputType || '',
-      GSTReturnFilingPeriod: apiData.GSTReturnFilingPeriod || ''
-    };
-  }
-
-  // Enhanced mapping from API response to form structure
-  mapApiToForm(apiData: any): any {
-    const account = this.mapApiToAccount(apiData);
-    console.log('Mapped Account for Form:', account);
-    
-    return {
-      name: account.Name,
-      alias: account.Alias,
-      printName: account.PrintName,
-      parentGroup: account.ParentGroup,
-      billByBillBalancing: account.BillByBillBalancing,
-      address: {
-        address1: account.Address.Address1,
-        address2: account.Address.Address2,
-        address3: account.Address.Address3,
-        email: account.Address.Email,
-        mobile: account.Address.Mobile,
-        whatsappNo: account.Address.WhatsAppNo,
-        itpan: account.Address.ITPAN,
-        contact: account.Address.Contact,
-        gstNo: account.Address.GSTNo,
-        countryName: account.Address.CountryName,
-        stateName: account.Address.StateName,
-        cityName: account.Address.CityName,
-        regionName: account.Address.RegionName,
-        areaName: account.Address.AreaName,
-        contDeptName: account.Address.ContDeptName,
-        pincode: account.Address.PINCode,
-        station: account.Address.Station,
-        accNo: account.Address.AccNo,
-        bankName: account.Address.C4,
-        ifsc: account.Address.C5
-      },
-      supplierType: account.SupplierType,
-      priceLevel: account.PriceLevel,
-      priceLevelForPurc: account.PriceLevelForPurc,
-      taxType: account.TaxType,
-      typeOfDealerGST: account.TypeOfDealerGST,
-      tmpCode: account.tmpCode,
-      tmpParentGrpCode: account.tmpParentGrpCode,
-      chequePrintName: account.ChequePrintName,
-      reverseChargeType: account.ReverseChargeType,
-      inputType: account.InputType,
-      gstReturnFilingPeriod: account.GSTReturnFilingPeriod
-    };
-  }
-
-  // Enhanced mapping from form to API format
-  mapFormToApi(formData: any): Account {
-    return {
-      Name: formData.name || '',
-      Alias: formData.alias || '',
-      PrintName: formData.printName || formData.name || '',
-      ParentGroup: formData.parentGroup || 'Sundry Debtors',
-      BillByBillBalancing: formData.billByBillBalancing || false,
-      Address: {
-        Address1: formData.address?.address1 || '',
-        Address2: formData.address?.address2 || '',
-        Address3: formData.address?.address3 || '',
-        Email: formData.address?.email || '',
-        Mobile: formData.address?.mobile || '',
-        WhatsAppNo: formData.address?.whatsappNo || formData.address?.mobile || '',
-        ITPAN: formData.address?.itpan || '',
-        Contact: formData.address?.contact || '',
-        GSTNo: formData.address?.gstNo || '',
-        CountryName: formData.address?.countryName || 'India',
-        StateName: formData.address?.stateName || '',
-        CityName: formData.address?.cityName || '',
-        RegionName: formData.address?.regionName || '',
-        AreaName: formData.address?.areaName || '',
-        ContDeptName: formData.address?.contDeptName || '',
-        PINCode: formData.address?.pincode || '',
-        Station: formData.address?.station || '',
-        AccNo: formData.address?.accNo || '',
-        TmpMasterCode: formData.tmpCode || '',
-        C4: formData.address?.bankName || '',
-        C5: formData.address?.ifsc || ''
-      },
-      SupplierType: formData.supplierType || '1',
-      PriceLevel: formData.priceLevel || '@',
-      PriceLevelForPurc: formData.priceLevelForPurc || '@',
-      TaxType: formData.taxType || 'Others',
-      TypeOfDealerGST: formData.typeOfDealerGST || 'Registered',
-      tmpCode: formData.tmpCode || '',
-      tmpParentGrpCode: formData.tmpParentGrpCode || '',
-      ChequePrintName: formData.chequePrintName || formData.name || '',
-      ReverseChargeType: formData.reverseChargeType || '',
-      InputType: formData.inputType || '',
-      GSTReturnFilingPeriod: formData.gstReturnFilingPeriod || ''
-    };
-  }
-
-  // Additional helper method for debugging - FIXED: Return type
-  testDirectConnection(masterCode: string): Observable<any> {
-    const headers = new HttpHeaders({
-      ...this.defaultHeaders,
-      'MasterCode': masterCode,
-      'Accept': 'application/xml'
-    });
-
-    // Test with direct URL (for comparison)
-    return this.http.get('http://103.174.86.37:982', { 
+    // GET request with headers as per Busy API
+    return this.http.get(this.apiUrl, { 
       headers, 
       responseType: 'text' 
     }).pipe(
-      map(response => ({
-        method: 'Direct Connection',
-        status: 'Success',
-        responsePreview: response.substring(0, 200) + '...',
-        isHtml: response.includes('<!doctype html>') || response.includes('<html'),
-        length: response.length
-      })),
       catchError(error => {
-        // Return an observable with the error result
-        return of({
-          method: 'Direct Connection',
-          status: 'Failed',
-          error: error.message
-        });
+        console.error('Create error:', error);
+        return throwError(() => error);
       })
     );
+  }
+
+  // Update/Modify existing account (Service Code 6)
+  updateMasterXML(masterCode: string, accountData: any): Observable<any> {
+    const xmlData = this.convertAccountToXML(accountData);
+    
+    const headers = new HttpHeaders({
+      'SC': '6', // Service code 6 for Modify Master
+      'MasterCode': masterCode, // Existing master code
+      'MasterXml': xmlData, // XML data in header
+      'UserName': 'm',
+      'Pwd': 'm'
+    });
+
+    return this.http.get(this.apiUrl, { 
+      headers, 
+      responseType: 'text' 
+    }).pipe(
+      catchError(error => {
+        console.error('Update error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // Helper method to convert account object to XML
+  private convertAccountToXML(accountData: any): string {
+    let xml = '<Account>';
+    
+    // Add basic fields
+    const basicFields = [
+      'Name', 'Alias', 'PrintName', 'ParentGroup', 'BillByBillBalancing',
+      'SupplierType', 'PriceLevel', 'PriceLevelForPurc', 'TaxType',
+      'TypeOfDealerGST', 'tmpCode', 'tmpParentGrpCode', 'ChequePrintName',
+      'ReverseChargeType', 'InputType', 'GSTReturnFilingPeriod'
+    ];
+    
+    basicFields.forEach(field => {
+      if (accountData[field] !== undefined && accountData[field] !== null) {
+        const value = accountData[field];
+        xml += `<${field}>${this.escapeXml(value.toString())}</${field}>`;
+      } else if (field === 'BillByBillBalancing') {
+        // Default value for BillByBillBalancing
+        xml += `<BillByBillBalancing>True</BillByBillBalancing>`;
+      }
+    });
+    
+    // Add Address section
+    if (accountData.Address) {
+      xml += '<Address>';
+      
+      const addressFields = [
+        'Address1', 'Address2', 'Address3', 'Email', 'Mobile', 'WhatsAppNo',
+        'ITPAN', 'Contact', 'GSTNo', 'OF', 'CountryName', 'StateName',
+        'CityName', 'RegionName', 'AreaName', 'ContDeptName', 'PINCode',
+        'Station', 'AccNo', 'TmpMasterCode', 'C4', 'C5'
+      ];
+      
+      addressFields.forEach(field => {
+        if (accountData.Address[field] !== undefined && accountData.Address[field] !== null) {
+          const value = accountData.Address[field];
+          xml += `<${field}>${this.escapeXml(value.toString())}</${field}>`;
+        } else if (field === 'OF') {
+          xml += `<${field}></${field}>`;
+        } else if (field === 'TmpMasterCode' && accountData.tmpCode) {
+          // Use tmpCode from main object if TmpMasterCode is not provided
+          xml += `<TmpMasterCode>${accountData.tmpCode}</TmpMasterCode>`;
+        }
+      });
+      
+      xml += '</Address>';
+    }
+    
+    xml += '</Account>';
+    
+    return xml;
+  }
+
+  // Helper method to escape XML special characters
+  private escapeXml(unsafe: string): string {
+    if (!unsafe) return '';
+    return unsafe.replace(/[<>&'"]/g, (c) => {
+      switch (c) {
+        case '<': return '&lt;';
+        case '>': return '&gt;';
+        case '&': return '&amp;';
+        case '\'': return '&apos;';
+        case '"': return '&quot;';
+        default: return c;
+      }
+    });
+  }
+
+  // Parse XML response for Create/Update operations
+  parseCreateUpdateResponse(xmlString: string): any {
+    try {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+      
+      // Check for errors in XML
+      const parserError = xmlDoc.getElementsByTagName('parsererror');
+      if (parserError.length > 0) {
+       console.error(`"<"XML Parse Error: ${parserError[0].textContent}`);
+        return { success: false, error: 'Invalid XML response' };
+      }
+      
+      // Check for Busy API error response
+      const errorElement = xmlDoc.getElementsByTagName('Error')[0];
+      if (errorElement) {
+        const errorCodeElement = xmlDoc.getElementsByTagName('ErrorCode')[0];
+        const errorDescElement = xmlDoc.getElementsByTagName('ErrorDescription')[0];
+        
+        return { 
+          success: false, 
+          error: errorElement.textContent || 'Unknown error',
+          errorCode: errorCodeElement?.textContent || '',
+          errorDescription: errorDescElement?.textContent || ''
+        };
+      }
+      
+      // Check for success response
+      const successElement = xmlDoc.getElementsByTagName('Success')[0];
+      if (successElement) {
+        const masterCodeElement = xmlDoc.getElementsByTagName('MasterCode')[0];
+        const masterNameElement = xmlDoc.getElementsByTagName('MasterName')[0];
+        const messageElement = xmlDoc.getElementsByTagName('Message')[0];
+        
+        return {
+          success: true,
+          message: successElement.textContent || messageElement?.textContent || 'Operation successful',
+          masterCode: masterCodeElement?.textContent || '',
+          masterName: masterNameElement?.textContent || ''
+        };
+      }
+      
+      // Some APIs might return MasterCode directly
+      const masterCodeElement = xmlDoc.getElementsByTagName('MasterCode')[0];
+      if (masterCodeElement) {
+        return {
+          success: true,
+          message: 'Account created successfully',
+          masterCode: masterCodeElement.textContent || '',
+          masterName: xmlDoc.getElementsByTagName('MasterName')[0]?.textContent || ''
+        };
+      }
+      
+      // Try to find any indication of success
+      const responseText = xmlString.toLowerCase();
+      if (responseText.includes('success') || responseText.includes('created')) {
+        return {
+          success: true,
+          message: 'Operation appears successful',
+          rawResponse: xmlString
+        };
+      }
+      
+      return { 
+        success: false, 
+        error: 'Unknown response format',
+        rawResponse: xmlString 
+      };
+      
+    } catch (error) {
+      console.error('Error parsing XML:', error);
+      return { 
+        success: false, 
+        error: 'Failed to parse response',
+        rawResponse: xmlString 
+      };
+    }
+  }
+
+  // Parse XML for Get operations (different structure)
+  parseGetResponse(xmlString: string): any {
+    try {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+      
+      const accountElement = xmlDoc.getElementsByTagName('Account')[0];
+      if (!accountElement) return {};
+      
+      const result: any = {};
+      
+      // Parse simple elements
+      const simpleElements = [
+        'Name', 'Alias', 'PrintName', 'ParentGroup', 'BillByBillBalancing',
+        'SupplierType', 'PriceLevel', 'PriceLevelForPurc', 'TaxType', 
+        'TypeOfDealerGST', 'tmpCode', 'tmpParentGrpCode', 'ChequePrintName',
+        'ReverseChargeType', 'InputType', 'GSTReturnFilingPeriod'
+      ];
+      
+      simpleElements.forEach(elementName => {
+        const element = accountElement.getElementsByTagName(elementName)[0];
+        if (element) {
+          result[elementName] = element.textContent || '';
+        }
+      });
+      
+      // Parse Address
+      const addressElement = accountElement.getElementsByTagName('Address')[0];
+      if (addressElement) {
+        result.Address = {};
+        const addressElements = [
+          'Address1', 'Address2', 'Address3', 'Email', 'Mobile', 'WhatsAppNo',
+          'ITPAN', 'Contact', 'GSTNo', 'OF', 'CountryName', 'StateName',
+          'CityName', 'RegionName', 'AreaName', 'ContDeptName', 'PINCode',
+          'Station', 'AccNo', 'TmpMasterCode', 'C4', 'C5'
+        ];
+        
+        addressElements.forEach(elementName => {
+          const element = addressElement.getElementsByTagName(elementName)[0];
+          if (element) {
+            result.Address[elementName] = element.textContent || '';
+          }
+        });
+      }
+      
+      return result;
+      
+    } catch (error) {
+      console.error('Error parsing XML:', error);
+      return {};
+    }
   }
 }
