@@ -87,6 +87,19 @@ throw new Error('Method not implemented.');
   }
 
   buyNow() {
-    this.router.navigate(['/products/checkout'])
-  }
+
+  this.cartService.setBuyNow({
+    id: this.productId,
+    title: this.productTitle,
+    price: this.price,
+    qty: this.qty,
+    image: this.mainImage
+  });
+
+  this.router.navigate(
+    ['/products/checkout'],
+    { queryParams: { mode: 'buynow' } }
+  );
+}
+
 }

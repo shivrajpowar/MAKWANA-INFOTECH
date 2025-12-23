@@ -5,42 +5,70 @@ import { Injectable } from '@angular/core';
 })
 export class CartService {
 
-  cartItems: any[] = [];
+  private cartItems: any[] = [];
+  private buyNowItem: any = null;
 
-  constructor() {}
-
+  // =========================
+  // ADD TO CART
+  // =========================
   addToCart(product: any) {
-    const existingItem = this.cartItems.find(
+    const existing = this.cartItems.find(
       item => item.id === product.id
     );
 
-    if (existingItem) {
-      existingItem.qty++;
+    if (existing) {
+      existing.qty += product.qty;
     } else {
-      this.cartItems.push({
-        ...product,
-        qty: 1
-      });
+      this.cartItems.push({ ...product });
     }
   }
 
+  // =========================
+  // BUY NOW (single item)
+  // =========================
+  setBuyNow(product: any) {
+    this.buyNowItem = { ...product };
+  }
+
+  // =========================
+  // GETTERS
+  // =========================
   getCartItems() {
     return this.cartItems;
   }
 
-  removeItem(index: number) {
-    this.cartItems.splice(index, 1);
+  getBuyNowItem() {
+    return this.buyNowItem ? [this.buyNowItem] : [];
   }
 
-  getTotal() {
-    return this.cartItems.reduce(
-      (total, item) => total + (item.price * item.qty),
+  // ✅ BACKWARD COMPATIBLE
+  // getTotal()  → cart total
+  // getTotal(items) → custom list total
+  getTotal(items?: any[]) {
+    const data = items ? items : this.cartItems;
+
+    return data.reduce(
+      (sum, item) => sum + item.price * item.qty,
       0
     );
   }
 
-  // ✅ ADD THIS (THIS FIXES YOUR ERROR)
+  // =========================
+  // REMOVE ITEM (cart page)
+  // =========================
+  removeItem(index: number) {
+    this.cartItems.splice(index, 1);
+  }
+
+  // =========================
+  // CLEAR METHODS
+  // =========================
   clearCart() {
     this.cartItems = [];
+  }
+
+  clearAll() {
+    this.cartItems = [];
+    this.buyNowItem = null;
   }
 }

@@ -55,24 +55,27 @@
       </div>
 
       <!-- ORDER SUMMARY -->
-      <div class="card checkout-card"
-           [class.disabled]="currentStep < 3">
-        <div class="card-header step-header">
-          <span class="step">3</span> ORDER SUMMARY
-        </div>
+      <div class="card-body" *ngIf="currentStep === 3">
 
-        <div class="card-body" *ngIf="currentStep === 3">
-          <p>Product A – ₹1000</p>
-          <p>Product B – ₹500</p>
-          <hr>
-          <strong>Total ₹1500</strong>
+  <div *ngFor="let item of cartItems">
+    <p>
+      {{ item.title }} × {{ item.qty }}
+      <span class="float-end">
+        ₹ {{ item.price * item.qty }}
+      </span>
+    </p>
+  </div>
 
-          <button class="btn btn-warning w-100 mt-2"
-                  (click)="confirmSummary()">
-            CONTINUE
-          </button>
-        </div>
-      </div>
+  <hr>
+  <h6 class="fw-bold">Total: ₹ {{ total }}</h6>
+
+  <button class="btn btn-warning w-100 mt-2"
+          (click)="confirmSummary()">
+    CONTINUE
+  </button>
+
+</div>
+
 
       <!-- PAYMENT -->
       <div class="card checkout-card"
