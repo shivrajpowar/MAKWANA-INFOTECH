@@ -1,4 +1,4 @@
- body {
+ /* body {
         font-family: Arial, sans-serif;
         background-color: #f4f7fb;
         padding: 20px;
@@ -42,4 +42,104 @@
 
     tr:hover {
         background-color: #f1d9e3;
-    }
+    } */
+     * {
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background: #f4f6f9;
+  padding: 15px;
+}
+
+.company-container {
+  max-width: 1000px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.company-container h2 {
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  font-size: 15px;
+}
+
+#searchInput:focus {
+  border-color: #0d6efd;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* TABLE DESKTOP */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: linear-gradient(135deg, #0d6efd, #0a58ca);
+  color: #fff;
+}
+
+th, td {
+  padding: 14px;
+  text-align: left;
+}
+
+tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+tbody tr:hover {
+  background: #f1f5ff;
+}
+
+/* ---------- MOBILE VIEW ---------- */
+@media (max-width: 768px) {
+  table thead {
+    display: none;
+  }
+
+  table, tbody, tr, td {
+    display: block;
+    width: 100%;
+  }
+
+  tbody tr {
+    margin-bottom: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 10px;
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+  }
+
+  td:last-child {
+    border-bottom: none;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #0d6efd;
+  }
+}
