@@ -1,5 +1,5 @@
 <!-- <p>company works!</p> -->
-    <!-- <div class="container">
+<!-- <div class="container">
 
     <h2>Search Company</h2>
     <input type="text" id="searchInput" placeholder="Search Company Name...">
@@ -36,45 +36,39 @@
     </table>
 </div> -->
 <div class="company-container">
-  <h2>Search Company</h2>
+    <div class="search-wrapper">
+        <span class="search-icon">
+            🔍
+        </span>
 
-  <input
-    type="text"
-    id="searchInput"
-    placeholder="🔍 Search Company Name..."
-    onkeyup="searchCompany()"
-  />
+        <div>
+            <input type="text" class="search-input" placeholder="Search Company Name" [(ngModel)]="searchText" />
+        </div>
+    </div>
+    <br>
+    <div class="responsive-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Code</th>
+                    <th>Fin. Year(s)</th>
+                    <th>Size (MB)</th>
+                </tr>
+            </thead>
 
-  <div class="responsive-table">
-    <table id="companyTable">
-      <thead>
-        <tr>
-          <th>Company Name</th>
-          <th>Code</th>
-          <th>Fin. Year(s)</th>
-          <th>Size (MB)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td data-label="Company Name">MAKWANA INFOTECH</td>
-          <td data-label="Code">Comp0001</td>
-          <td data-label="Fin. Year(s)">2021–2022 (1 Year)</td>
-          <td data-label="Size (MB)">13</td>
-        </tr>
-        <tr>
-          <td data-label="Company Name">TEST COMPANY</td>
-          <td data-label="Code">Comp0002</td>
-          <td data-label="Fin. Year(s)">2021–2022 (1 Year)</td>
-          <td data-label="Size (MB)">80</td>
-        </tr>
-        <tr>
-          <td data-label="Company Name">COMPANY 2021</td>
-          <td data-label="Code">Comp0003</td>
-          <td data-label="Fin. Year(s)">2021–2022 (2 Years)</td>
-          <td data-label="Size (MB)">43</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+            <tbody>
+                <tr *ngFor="let company of filteredCompanies">
+                    <td data-label="Company Name">{{ company.name }}</td>
+                    <td data-label="Code">{{ company.code }}</td>
+                    <td data-label="Fin. Year(s)">{{ company.year }}</td>
+                    <td data-label="Size (MB)">{{ company.size }}</td>
+                </tr>
+
+                <tr *ngIf="filteredCompanies.length === 0">
+                    <td colspan="4" style="text-align:center;">No company found</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
