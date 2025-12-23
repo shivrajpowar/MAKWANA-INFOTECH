@@ -32,25 +32,56 @@ export class AccountModifyComponent implements OnInit {
     this.initializeForms();
   }
 
-  ngOnInit(): void {
-    // Check route parameters
-    this.route.params.subscribe(params => {
-      if (params['masterCode']) {
-        this.masterCode = params['masterCode'];
-        this.masterCodeForm.patchValue({ masterCode: this.masterCode });
-        this.loadAccountData();
-      }
-    });
+  // ngOnInit(): void {
+  //   // Check route parameters
+  //   this.route.params.subscribe(params => {
+  //     if (params['masterCode']) {
+  //       this.masterCode = params['masterCode'];
+  //       this.masterCodeForm.patchValue({ masterCode: this.masterCode });
+  //       this.loadAccountData();
+  //     }
+  //   });
 
-    // Check query parameters
-    this.route.queryParams.subscribe(params => {
-      if (params['masterCode']) {
-        this.masterCode = params['masterCode'];
-        this.masterCodeForm.patchValue({ masterCode: this.masterCode });
-        this.loadAccountData();
-      }
-    });
-  }
+  //   // Check query parameters
+  //   this.route.queryParams.subscribe(params => {
+  //     if (params['masterCode']) {
+  //       this.masterCode = params['masterCode'];
+  //       this.masterCodeForm.patchValue({ masterCode: this.masterCode });
+  //       this.loadAccountData();
+  //     }
+  //   });
+  // }
+
+  ngOnInit(): void {
+  // Existing route params logic
+  this.route.params.subscribe(params => {
+    if (params['masterCode']) {
+      this.masterCode = params['masterCode'];
+      this.masterCodeForm.patchValue({ masterCode: this.masterCode });
+      this.loadAccountData();
+    }
+  });
+
+  this.route.queryParams.subscribe(params => {
+    if (params['masterCode']) {
+      this.masterCode = params['masterCode'];
+      this.masterCodeForm.patchValue({ masterCode: this.masterCode });
+      this.loadAccountData();
+    }
+  });
+
+  // ✅ AUTO-FILL PrintName FROM Name
+  const nameCtrl = this.accountForm.get('Name');
+  const printCtrl = this.accountForm.get('PrintName');
+
+  nameCtrl?.valueChanges.subscribe(value => {
+    // Only auto-fill if user has not manually edited PrintName
+    if (!printCtrl?.dirty) {
+      printCtrl?.setValue(value, { emitEvent: false });
+    }
+  });
+}
+
 
   private initializeForms(): void {
     // Master Code Form
