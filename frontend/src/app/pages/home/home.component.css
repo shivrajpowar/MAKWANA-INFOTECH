@@ -199,85 +199,91 @@
     z-index: 1000;
   }
 
-/* ================= SLIDER ================= */
+ 
+}
+    /*************/
 
-.micro-slider {
+  
+
+.product-img {
+  width: 100%;
+  height: 100px;
+  object-fit: contain;
+}
+ 
+/* SLIDER CONTAINER */
+.custom-slider {
   position: relative;
   width: 100%;
-  height: 260px;          /* perfect banner height */
-  margin: 12px 0;
+  height: 380px;
   overflow: hidden;
-  border-radius: 6px;
-}
+  background: #f4f6f8;
 
-/* Slide */
-.micro-slide {
+}
+/* SLIDE */
+.slide {
   position: absolute;
   inset: 0;
   opacity: 0;
   transition: opacity 0.6s ease-in-out;
 }
 
-.micro-slide.active {
+.slide.active {
   opacity: 1;
+  z-index: 1;
 }
 
-/* Image */
-.micro-slide img {
+/* IMAGE (LANDSCAPE PERFECT) */
+.slide img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;     /* NO stretch */
-}
+    height: 350px;  
+    object-fit: fill; 
+}/* ✅ no crop, no stretch */
 
-/* Text overlay */
-.micro-content {
+
+/* ARROWS */
+.nav {
   position: absolute;
-  left: 20px;
-  bottom: 18px;
-  background: rgba(0, 0, 0, 0.45);
-  padding: 8px 12px;
-  border-radius: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background:transparent;
   color: #fff;
-  font-size: 13px;
+  border: none;
+  font-size: 30px;
+  padding: 8px 14px;
+  cursor: pointer;
+  z-index: 2;
 }
 
-.micro-content strong {
-  display: block;
-  font-size: 14px;
-}
+.prev { left: 10px; }
+.next { right: 10px; }
 
-/* Pager dots */
-.micro-dots {
+/* DOTS */
+.dots {
   position: absolute;
-  right: 16px;
-  bottom: 14px;
+  bottom: 12px;
+  width: 100%;
+  text-align: center;
+  z-index: 2;
 }
 
-.micro-dots span {
+.dots span {
   display: inline-block;
-  width: 7px;
-  height: 7px;
-  margin-left: 6px;
-  background: rgba(255,255,255,0.6);
+  width: 9px;
+  height: 9px;
+  margin: 0 5px;
+ 
   border-radius: 50%;
   cursor: pointer;
 }
 
-.micro-dots span.active {
+.dots span.active {
   background: #fff;
 }
 
-
-}
-    /*************/
-
-    .slider-img {
-  height: 210px;
-  object-fit: cover;
-}
-
-.product-img {
-  width: 100%;
-  height: 100px;
-  object-fit: contain;
+/* MOBILE */
+@media (max-width: 768px) {
+  .custom-slider {
+    height: 220px;
+  }
 }
