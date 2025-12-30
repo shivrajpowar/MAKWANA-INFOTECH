@@ -1,5 +1,6 @@
 <!-- <p>company works!</p> -->
-    <div class="container">
+<!-- <div class="container">
+
     <h2>Search Company</h2>
     <input type="text" id="searchInput" placeholder="Search Company Name...">
 
@@ -33,4 +34,41 @@
             </tr>
         </tbody>
     </table>
+</div> -->
+<div class="company-container">
+    <div class="search-wrapper">
+        <span class="search-icon">
+            🔍
+        </span>
+
+        <div>
+            <input type="text" class="search-input" placeholder="Search Company Name" [(ngModel)]="searchText" />
+        </div>
+    </div>
+    <br>
+    <div class="responsive-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Code</th>
+                    <th>Fin. Year(s)</th>
+                    <th>Size (MB)</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let company of filteredCompanies">
+                    <td data-label="Company Name">{{ company.name }}</td>
+                    <td data-label="Code">{{ company.code }}</td>
+                    <td data-label="Fin. Year(s)">{{ company.year }}</td>
+                    <td data-label="Size (MB)">{{ company.size }}</td>
+                </tr>
+
+                <tr *ngIf="filteredCompanies.length === 0">
+                    <td colspan="4" style="text-align:center;">No company found</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CartService } from '../../services/cart.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-checkout',
@@ -11,13 +13,13 @@ import { FormsModule } from '@angular/forms';
 })
 export class CheckoutComponent implements OnInit {
 
-  currentStep = 1;
+    currentStep = 1;
 
-  // LOGIN
+  // ✅ LOGIN
   emailOrMobile = '';
   password = '';
 
-  // ADDRESS
+  // ✅ ADDRESS
   address = {
     name: '',
     mobile: '',
@@ -26,15 +28,31 @@ export class CheckoutComponent implements OnInit {
     pincode: ''
   };
 
-  // PAYMENT
+  // ✅ PAYMENT
   selectedPayment = '';
 
-  ngOnInit(): void {
-    const user = localStorage.getItem('user');
-    if (user) {
-      this.currentStep = 2;
-    }
+  // ✅ CART DATA (IMPORTANT FOR YOUR ISSUE)
+  cartItems: any[] = [];
+  total = 0;
+
+  constructor(private cartService: CartService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit() {
+
+  const mode = this.route.snapshot.queryParamMap.get('mode');
+
+  if (mode === 'buynow') {
+    // ⚡ single item checkout
+    this.cartItems = this.cartService.getBuyNowItem();
+  } else {
+    // 🛒 cart checkout
+    this.cartItems = this.cartService.getCartItems();
   }
+
+  this.total = this.cartService.getTotal(this.cartItems);
+}
 
   login() {
     if (!this.emailOrMobile || !this.password) {
@@ -59,11 +77,13 @@ export class CheckoutComponent implements OnInit {
   }
 
   placeOrder() {
-    if (!this.selectedPayment) {
-      alert('Select payment method');
-      return;
-    }
-    alert('🎉 Order placed successfully');
-    this.currentStep = 5;
+  if (!this.selectedPayment) {
+    alert('Select payment method');
+    return;
   }
+
+  this.cartService.clearAll();
+  this.currentStep = 5;
+}
+
 }
