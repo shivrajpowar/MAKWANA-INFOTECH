@@ -1,0 +1,7 @@
+<div>
+  <label for="masterCode">Master Code:</label>
+  <input id="masterCode" [(ngModel)]="masterCode" placeholder="Enter Master Code">
+  <button (click)="fetchMasterXML()">Get Master XML</button>
+
+  <pre *ngIf="xmlResponse">{{ xmlResponse }}</pre>
+</div>

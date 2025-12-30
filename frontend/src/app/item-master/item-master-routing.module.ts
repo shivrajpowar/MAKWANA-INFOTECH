@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { ItemAddComponent } from './item-add/item-add.component';
 import { ItemModifyComponent } from './item-modify/item-modify.component';
 import { ItemListComponent } from './item-list/item-list.component';
+import { ApiDebugItemComponent } from './api-debug-item/api-debug-item.component';
 
 const routes: Routes = [
   {path:"Item-add",component:ItemAddComponent},
   {path:"Item-modify",component:ItemModifyComponent},
-  {path:"Item-list", component:ItemListComponent}
+  {path:"Item-list", component:ItemListComponent},
+  {path:"Debuging", component:ApiDebugItemComponent}
 ];
 
 @NgModule({
