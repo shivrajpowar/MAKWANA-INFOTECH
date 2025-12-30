@@ -17,8 +17,10 @@
 }
 
 .nav-bar a:hover {
-
+  color: #ffd6e4;
+ 
 }
+
 
 
 
@@ -42,12 +44,21 @@
 }
 
 .edition-card {
-  width: 300px;
+  width: 320px;                 /* size वाढवली */
   background: #fff;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  padding: 22px;                /* inner spacing */
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
   text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.edition-card:hover {
+  /* transform: translateY(-10px); */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.edition-card img:hover {
+  transform: scale(1.1);
 }
 
 .edition-title {
@@ -68,10 +79,12 @@
 .price-box {
   background: #8b0038;
   color: white;
-  padding: 12px;
-  border-radius: 8px;
-  margin-top: 15px;
+  padding: 14px;
+  border-radius: 10px;
+  margin-top: 18px;
+  font-size: 15px;
 }
+
 
 .row {
   display: flex;
@@ -87,26 +100,24 @@
 }
 
 .buy-btn {
-  margin-top: 18px;
-  padding: 10px 20px;
-  background: #004c99;
+  margin-top: 22px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #004c99, #0066cc);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .buy-btn:hover {
-  background: #003366;
+  background: linear-gradient(135deg, #003366, #004c99);
+  transform: scale(1.05);
 }
-.nav-bar {
-  background: #8b0038;
-  color: white;
-  padding: 10px 20px;
-  position: relative;
-  z-index: 1000;
-}
+
+ 
 
 .nav-container {
   display: flex;

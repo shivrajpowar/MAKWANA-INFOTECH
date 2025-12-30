@@ -91,9 +91,9 @@
       </div>
 
       <!-- ✅ BUY NOW WORKING -->
-      <button class="buy-btn" [routerLink]="['/product', 1]">
-        Buy Now
-      </button>
+     <button class="buy-btn" [routerLink]="['/products/view-product', 1]">
+  Buy Now
+</button>
     </div>
 
     <!-- STANDARD EDITION -->
@@ -118,9 +118,9 @@
       </div>
 
       <!-- ✅ BUY NOW WORKING -->
-      <button class="buy-btn" (click)="goToProduct()">
-        Buy Now
-      </button>
+      <button class="buy-btn" [routerLink]="['/products/view-product', 2]">
+  Buy Now
+</button>
     </div>
 
     <!-- ENTERPRISE EDITION -->
@@ -145,9 +145,9 @@
       </div>
 
       <!-- ✅ BUY NOW WORKING -->
-      <button class="buy-btn" [routerLink]="['/product', 3]">
-        Buy Now
-      </button>
+      <button class="buy-btn" [routerLink]="['/products/view-product', 3]">
+  Buy Now
+</button>
     </div>
 
   </div>
