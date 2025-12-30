@@ -1,91 +1,317 @@
-<!-- <p>item-master works!</p> -->
- <h2>Add Item Master</h2>
+<!-- item-add.component.html -->
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="mb-0">Create New Item</h2>
+          <small class="text-white-50">Service Code: 5 | Master Type: 6</small>
+        </div>
+      </div>
+    </div>
 
-<form>
-  <!-- Item Details Row 1 -->
-  <div class="row">
-    <div class="form-group">
-      <label>Name</label>
-      <input type="text" name="name" value="Premium Notebook">
+    <!-- Response Message -->
+    <div *ngIf="showResponse" class="alert m-3" 
+         [ngClass]="responseType === 'success' ? 'alert-success' : 'alert-danger'">
+      {{ responseMessage }}
+      <button type="button" class="btn-close" (click)="showResponse = false"></button>
     </div>
-    <div class="form-group">
-      <label>Alias</label>
-      <input type="text" name="alias" value="PNB-001">
+
+    <!-- Action Buttons -->
+    <div class="card-body bg-light border-bottom">
+      <div class="d-flex gap-2 mb-3">
+        <button type="button" class="btn btn-info btn-sm" (click)="fillSampleData()">
+          Fill Sample Data
+        </button>
+        <button type="button" class="btn btn-warning btn-sm" (click)="resetForm()">
+          Clear Form
+        </button>
+      </div>
     </div>
+
+    <!-- Form -->
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="p-3">
+      
+      <!-- Basic Information -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <h4 class="section-title mb-3">Basic Information</h4>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Item Name <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="Name" 
+                 placeholder="Enter item name">
+          <div *ngIf="formControls['Name'].invalid && formControls['Name'].touched" 
+               class="text-danger small mt-1">
+            Item name is required
+          </div>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Print Name</label>
+          <input type="text" class="form-control" formControlName="PrintName" 
+                 placeholder="Name for printing">
+        </div>
+        
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Parent Group <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="ParentGroup" 
+                 placeholder="General">
+          <div *ngIf="formControls['ParentGroup'].invalid && formControls['ParentGroup'].touched" 
+               class="text-danger small mt-1">
+            Parent group is required
+          </div>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Main Unit <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="MainUnit" 
+                 placeholder="Pcs.">
+          <div *ngIf="formControls['MainUnit'].invalid && formControls['MainUnit'].touched" 
+               class="text-danger small mt-1">
+            Main unit is required
+          </div>
+        </div>
+      </div>
+
+      <!-- Unit Information -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <h4 class="section-title mb-3">Unit Information</h4>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Alternative Unit</label>
+          <input type="text" class="form-control" formControlName="AltUnit" 
+                 placeholder="Pcs.">
+        </div>
+        
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Conversion Factor</label>
+          <input type="number" class="form-control" formControlName="ConversionFactor" 
+                 min="0.01" step="0.01" value="1">
+        </div>
+        
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Conversion Type</label>
+          <select class="form-control" formControlName="ConFactorType">
+            <option value="1">Fixed (1)</option>
+            <option value="2">Variable (2)</option>
+          </select>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Packing Unit</label>
+          <input type="text" class="form-control" formControlName="PackingUnitName" 
+                 placeholder="Pcs.">
+        </div>
+      </div>
+
+      <!-- Pricing Information -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <h4 class="section-title mb-3">Pricing Information</h4>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Sale Price <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" formControlName="SalePrice" 
+                 min="0" step="0.01" required>
+          <div *ngIf="formControls['SalePrice'].invalid && formControls['SalePrice'].touched" 
+               class="text-danger small mt-1">
+            Sale price is required
+          </div>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Purchase Price <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" formControlName="PurchasePrice" 
+                 min="0" step="0.01" required>
+          <div *ngIf="formControls['PurchasePrice'].invalid && formControls['PurchasePrice'].touched" 
+               class="text-danger small mt-1">
+            Purchase price is required
+          </div>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">MRP</label>
+          <input type="number" class="form-control" formControlName="MRP" 
+                 min="0" step="0.01">
+        </div>
+      </div>
+
+      <!-- Tax Information -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <h4 class="section-title mb-3">Tax Information</h4>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Tax Category</label>
+          <input type="text" class="form-control" formControlName="TaxCategory" 
+                 placeholder="GST 18%">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">HSN Code</label>
+          <input type="text" class="form-control" formControlName="HSNCode" 
+                 placeholder="1234">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">HSN Code for GST</label>
+          <input type="text" class="form-control" formControlName="HSNCodeGST" 
+                 placeholder="1234">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Local Tax Rate (%)</label>
+          <input type="number" class="form-control" formControlName="TaxRateLocal" 
+                 min="0" max="100" step="0.01" value="9">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Local Tax Rate 1 (%)</label>
+          <input type="number" class="form-control" formControlName="TaxRateLocal1" 
+                 min="0" max="100" step="0.01" value="9">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Central Tax Rate (%)</label>
+          <input type="number" class="form-control" formControlName="TaxRateCentral" 
+                 min="0" max="100" step="0.01" value="18">
+        </div>
+      </div>
+
+      <!-- Address Information -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <h4 class="section-title mb-3">Address Information</h4>
+        </div>
+        
+        <!-- Using nested formGroup with formControlName -->
+        <div formGroupName="Address" class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">OF</label>
+            <input type="text" class="form-control" formControlName="OF" 
+                   placeholder="Optional field">
+          </div>
+          
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Temp Master Code</label>
+            <input type="text" class="form-control" formControlName="TmpMasterCode" 
+                   placeholder="1298">
+          </div>
+        </div>
+      </div>
+
+      <!-- Temporary Codes -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <h4 class="section-title mb-3">Temporary Codes (Optional)</h4>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Temporary Code</label>
+          <input type="text" class="form-control" formControlName="tmpCode" 
+                 placeholder="1298">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Group Code</label>
+          <input type="text" class="form-control" formControlName="tmpGroupCode" 
+                 placeholder="401">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Main Unit Code</label>
+          <input type="text" class="form-control" formControlName="tmpMainUnitCode" 
+                 placeholder="1183">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Alt Unit Code</label>
+          <input type="text" class="form-control" formControlName="tmpAltUnitCode" 
+                 placeholder="1183">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Sales Account Code</label>
+          <input type="text" class="form-control" formControlName="tmpSaleAccCode" 
+                 placeholder="4">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Purchase Account Code</label>
+          <input type="text" class="form-control" formControlName="tmpPurcAccCode" 
+                 placeholder="5">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Packing Unit Code</label>
+          <input type="text" class="form-control" formControlName="tmpPackingUnitCode" 
+                 placeholder="1183">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Tax Category Code</label>
+          <input type="text" class="form-control" formControlName="tmpTaxCategoryCode" 
+                 placeholder="1101">
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Percent of Amount</label>
+          <input type="number" class="form-control" formControlName="PercentOfAmount" 
+                 min="0" max="100" value="100">
+        </div>
+      </div>
+
+      <!-- Stock Settings -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <h4 class="section-title mb-3">Stock Settings</h4>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Stock Valuation Method</label>
+          <select class="form-control" formControlName="StockValMethod">
+            <option value="5">Standard (5)</option>
+            <option value="1">FIFO (1)</option>
+            <option value="2">LIFO (2)</option>
+            <option value="3">Average (3)</option>
+          </select>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Serial Number Type</label>
+          <select class="form-control" formControlName="ItemSrNoType">
+            <option value="1">No Tracking (1)</option>
+            <option value="2">Manual Entry (2)</option>
+            <option value="3">Auto Generate (3)</option>
+          </select>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Batch Number Type</label>
+          <select class="form-control" formControlName="ItemBatchNoType">
+            <option value="1">No Tracking (1)</option>
+            <option value="2">Manual Entry (2)</option>
+            <option value="3">Auto Generate (3)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="row mt-4">
+        <div class="col-12 text-end">
+          <button type="submit" class="btn btn-primary" 
+                  [disabled]="isSubmitting || itemForm.invalid">
+            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+            {{ isSubmitting ? 'Adding Item...' : 'Add Item' }}
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
-
-  <!-- Item Details Row 2 -->
-  <div class="row">
-    <div class="form-group">
-      <label>Print Name</label>
-      <input type="text" name="printName" value="Premium Notebook 2025">
-    </div>
-    <div class="form-group">
-      <label>Group</label>
-      <input type="text" name="group" value="Stationery">
-    </div>
-  </div>
-
-  <!-- Stock Info Row -->
-  <div class="row">
-    <div class="form-group">
-      <label>Opening Stock (Qty)</label>
-      <input type="number" name="stockQty" value="150">
-    </div>
-    <div class="form-group">
-      <label>Opening Stock (Value)</label>
-      <input type="number" name="stockValue" value="4500">
-    </div>
-  </div>
-
-  <!-- Price Details Row 1 -->
-  <div class="row">
-    <div class="form-group">
-      <label>Sale Price</label>
-      <input type="number" name="salePrice" value="35">
-    </div>
-    <div class="form-group">
-      <label>Purchase Price</label>
-      <input type="number" name="purchasePrice" value="30">
-    </div>
-  </div>
-
-  <!-- Price Details Row 2 -->
-  <div class="row">
-    <div class="form-group">
-      <label>M.R.P.</label>
-      <input type="number" name="mrp" value="40">
-    </div>
-    <div class="form-group">
-      <label>Min. Sales Price</label>
-      <input type="number" name="minSalePrice" value="32">
-    </div>
-  </div>
-
-  <!-- Price Details Row 3 -->
-  <div class="row">
-    <div class="form-group">
-      <label>Self-Val Price</label>
-      <input type="number" name="selfValPrice" value="35">
-    </div>
-    <div class="form-group">
-      <label>&nbsp;</label> <!-- empty label for alignment -->
-      <input type="text" value="" style="visibility:hidden;">
-    </div>
-  </div>
-
-  <!-- Extra Info Row -->
-  <div class="row">
-    <div class="form-group" style="flex: 1;">
-      <label>Extra Info</label>
-      <textarea name="extraInfo">This is a high-quality notebook suitable for office and school use. Available in multiple colors and sizes.</textarea>
-    </div>
-  </div>
-
-  <!-- Buttons -->
-  <div class="buttons">
-    <button type="submit" class="btn btn-md btn-success">Save</button>
-    <button type="button" class="btn btn-md btn-danger">Quit</button>
-  </div>
-</form>
-
+</div>

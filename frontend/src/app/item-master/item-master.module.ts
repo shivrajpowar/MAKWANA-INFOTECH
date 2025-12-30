@@ -5,6 +5,7 @@ import { ItemMasterRoutingModule } from './item-master-routing.module';
 import { ItemAddComponent } from './item-add/item-add.component';
 import { ItemModifyComponent } from './item-modify/item-modify.component';
 import { ItemListComponent } from './item-list/item-list.component';
+import { ApiDebugItemComponent } from './api-debug-item/api-debug-item.component';
 
 
 @NgModule({
@@ -12,7 +13,7 @@ import { ItemListComponent } from './item-list/item-list.component';
   imports: [
     CommonModule,
     ItemMasterRoutingModule,
-    ItemAddComponent,ItemModifyComponent,ItemListComponent
+    ItemAddComponent,ItemModifyComponent,ItemListComponent,ApiDebugItemComponent
   ]
 })
 export class ItemMasterModule { }
