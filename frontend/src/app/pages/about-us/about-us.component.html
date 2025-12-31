@@ -1,0 +1,147 @@
+<!-- about-us.component.html -->
+<div class="about-us-container">
+  
+  <!-- Header Banner -->
+  <div class="header-banner">
+    <h1>About Makwana Infotech</h1>
+    <p>Your Trusted Partner for Busy Accounting Solutions</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    
+    <!-- Company Overview -->
+    <div class="content-section">
+      <h2>Welcome to Makwana Infotech</h2>
+      <div class="section-content">
+        <p>
+          <strong>Makwana Infotech</strong> is an authorized dealer of <strong>Busy Accounting Software</strong>, 
+          dedicated to providing comprehensive accounting solutions to businesses in Jodhpur and across Rajasthan.
+        </p>
+        <p>
+          With years of experience and expertise, we help businesses streamline their financial operations, 
+          improve efficiency, and achieve better financial control through cutting-edge Busy Accounting solutions.
+        </p>
+      </div>
+    </div>
+
+    <!-- Key Information Cards -->
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="card-icon">✓</div>
+        <h3>Authorized Dealer</h3>
+        <p>Official authorized dealer of Busy Accounting Software</p>
+      </div>
+      
+      <div class="info-card">
+        <div class="card-icon clickable-icon" (click)="openMap()">📍</div>
+        <h3>Based in Jodhpur</h3>
+        <p>Serving businesses across Rajasthan with local expertise</p>
+        <small class="icon-hint">Click the location icon to open map</small>
+      </div>
+      
+      <div class="info-card">
+        <div class="card-icon">⭐</div>
+        <h3>Expert Support</h3>
+        <p>Professional installation, training, and 24/7 support</p>
+      </div>
+    </div>
+
+    <!-- Proprietor Section -->
+    <div class="content-section">
+      <h2>Our Leadership</h2>
+      <div class="proprietor-section">
+        <div class="proprietor-info">
+          <div class="proprietor-header">
+            <h3>Vikrant Makwana</h3>
+            <span class="proprietor-badge">Proprietor</span>
+          </div>
+          <p>
+            With extensive experience in accounting software solutions, Vikrant Makwana leads 
+            Makwana Infotech with a customer-first approach and deep expertise in Busy Accounting Software.
+          </p>
+          <div class="proprietor-quote">
+            <p>"We believe in building lasting relationships with our clients by providing reliable 
+            accounting solutions that drive business growth."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="contact-section">
+      <h2>Contact Us</h2>
+      <div class="contact-grid">
+        <!-- Address with Map Link -->
+        <div class="contact-item address-item">
+          <div class="contact-icon clickable-icon" (click)="openMap()">📍</div>
+          <div class="contact-details">
+            <h4>Address</h4>
+            <p class="address-text">
+              Sheetal Complex, Near Sony Automobile<br>
+              Bombay Motor Circle<br>
+              JODHPUR-342001 (Rajasthan)
+            </p>
+            <small class="click-hint">Click location icon to open map</small>
+          </div>
+        </div>
+        
+        <!-- Phone Numbers -->
+        <div class="contact-item phone-item">
+          <div class="contact-icon">📞</div>
+          <div class="contact-details">
+            <h4>Phone</h4>
+            <p>
+              <a href="tel:+916377697551" class="phone-link">63776 97551</a><br>
+              <a href="tel:+919660434711" class="phone-link">96604 34711</a>
+            </p>
+            <small class="click-hint">Click number to call directly</small>
+          </div>
+        </div>
+        
+        <!-- Email -->
+        <div class="contact-item email-item">
+          <div class="contact-icon clickable-icon" (click)="sendEmail()">✉️</div>
+          <div class="contact-details">
+            <h4>Email</h4>
+            <p class="email-text">
+              makwanainfotech&#64;gmail.com
+            </p>
+            <small class="click-hint">Click email icon to send message</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Why Choose Us -->
+    <div class="content-section">
+      <h2>Why Choose Makwana Infotech?</h2>
+      <div class="features-list">
+        <div class="feature-item">
+          <span class="feature-number">1</span>
+          <div class="feature-text">
+            <h4>Genuine Software</h4>
+            <p>As authorized dealers, we provide only genuine Busy software with official licenses</p>
+          </div>
+        </div>
+        
+        <div class="feature-item">
+          <span class="feature-number">2</span>
+          <div class="feature-text">
+            <h4>Local Expertise</h4>
+            <p>Understanding of local business needs and requirements in Rajasthan</p>
+          </div>
+        </div>
+        
+        <div class="feature-item">
+          <span class="feature-number">3</span>
+          <div class="feature-text">
+            <h4>Complete Support</h4>
+            <p>End-to-end support from sales to implementation and training</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
