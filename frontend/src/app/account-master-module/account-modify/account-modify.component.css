@@ -8,12 +8,12 @@
 
 /* Button styling - clean and consistent */
 .card-header .btn { border-radius: 6px; padding: 8px 16px; font-weight: 500; min-width: 120px; }
-.btn-primary { background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); border: none; }
+.btn-primary { background: linear-gradient(135deg, #f5105c 0%, #6f1331 100%); border: none; }
 .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .card-header {
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
-  border-bottom: 1px solid #0056b3;
+  background: linear-gradient(135deg, #f5105c 0%, #6f1331 100%) !important;
+  border-bottom: 1px solid #6f1331;
   padding: 20px 25px;
   min-height: 80px;
   display: flex;
@@ -48,7 +48,7 @@
 
 .card-header .btn-outline-light:hover:not(:disabled) {
   background-color: white;
-  color: #007bff;
+  color: #fa266d;
   border-color: white;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -81,7 +81,12 @@
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
-
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #dce0e6;
+  padding: 9px 12px;
+  font-size: 0.9rem;
+}
 /* Validation */
 .invalid-feedback {
   display: block;
@@ -102,8 +107,8 @@ h5 {
 /* Buttons */
 .btn-primary {
   min-width: 100px;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #6f1331;
+  border-color: #6f1331;
 }
 
 /* Accordion */

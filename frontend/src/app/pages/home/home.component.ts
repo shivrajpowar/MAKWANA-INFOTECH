@@ -12,7 +12,7 @@ import { RouterLink } from '@angular/router';
 export class HomeComponent implements OnInit, OnDestroy{
   
   slides = [
-    'assets/imgi_57_55_busyaccounting.jpg',
+    // 'assets/imgi_57_55_busyaccounting.jpg',
     'assets/imgi_58_55_busyaccountingeinvoice.jpg',
     'assets/imgi_59_55_busyaccountinggstbilling.jpg',
     'assets/imgi_60_55_busyaccountingeffortlessgstr.jpg',

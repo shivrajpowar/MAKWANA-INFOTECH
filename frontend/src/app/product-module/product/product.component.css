@@ -1,38 +1,39 @@
+/* ================= PRODUCT CARD ================= */
 .product-card {
   border: 1px solid #e2e2e2;
   padding: 20px;
   border-radius: 8px;
   background: #fff;
   box-shadow: 0 0 8px rgba(0,0,0,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s forwards;
 }
 
-/* 🔥 Product Image Bigger Size */
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* ================= PRODUCT IMAGE ================= */
 .product-card img {
-  width: 220px;        /* SIZE वाढवली */
-  height: auto;        /* proportion maintain */
+  width: 220px;
+  height: 180px;
   margin: 15px auto;
   display: block;
-  padding: 15px;
-  background: transparent;
+  padding: 10px;
   border-radius: 6px;
-  object-fit: contain; /* image न ताणता show */
+  object-fit: contain;
+  background: transparent;
+  transition: transform 0.3s;
 }
 
-/* BUY BUTTON */
-.buy-btn {
-  background: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px 0;
-  border-radius: 4px;
-  font-weight: 600;
+.product-card img:hover {
+  transform: scale(1.08);
 }
 
-.buy-btn:hover {
-  background: #0056b3;
-}
-
-/* Model Dropdown Row */
+/* ================= MODEL SELECT ================= */
 .model-select-row {
   display: flex;
   align-items: center;
@@ -48,41 +49,74 @@
 
 .model-dropdown {
   font-size: 14px;
-  padding: 3px 8px;
+  padding: 4px 8px;
   min-width: 190px;
 }
-.product-card {
-  transition: transform 0.3s, box-shadow 0.3s;
+
+/* ================= BUTTON ================= */
+.btn-primary {
+  font-size: 14px;
+  padding: 8px 0;
+  transition: background-color 0.3s, transform 0.2s;
 }
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
 }
-.product-card {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.5s forwards;
-}
+
+/* ================= ANIMATION ================= */
 @keyframes fadeInUp {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-.btn-primary {
-  transition: background-color 0.3s, transform 0.2s;
-}
-.btn-primary:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
-}
-.product-card img {
-  transition: transform 0.3s;
-}
-.product-card img:hover {
-  transform: scale(1.1);
-}
+
+/* ================= COLLAPSE ================= */
 .collapse {
   transition: height 0.4s ease;
 }
 
+/* ================= TABLET VIEW ================= */
+@media (max-width: 991px) {
+
+  .product-card {
+    padding: 16px;
+  }
+
+  .product-card img {
+    width: 180px;
+    height: 150px;
+  }
+
+  .model-select-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .model-dropdown {
+    min-width: 100%;
+  }
+
+  .btn-primary {
+    width: 100% !important;
+  }
+}
+
+/* ================= MOBILE VIEW ================= */
+@media (max-width: 576px) {
+
+  .product-card img {
+    width: 160px;
+    height: 130px;
+  }
+
+  .model-label {
+    font-size: 13px;
+  }
+
+  h5 {
+    font-size: 15px;
+  }
+}

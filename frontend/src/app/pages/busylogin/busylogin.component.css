@@ -16,8 +16,8 @@
 
 /* ================= HEADER ================= */
 .login-header {
-  /* background: #6f1331; */
-  color: #6f1331;
+  background: #d60a4e;
+  color: #fdf2f5;
   font-size: 30px;
   font-weight: 800;
   padding: 20px;
@@ -34,7 +34,7 @@
 
 /* ================= BUTTON ================= */
 .btn-primary {
-  background-color: #6f1331;
+  background-color:linear-gradient(135deg, #f5105c 0%, #6f1331 100%);
   border-color: #6f1331;
 }
 

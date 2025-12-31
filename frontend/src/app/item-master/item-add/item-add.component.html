@@ -1,11 +1,11 @@
 <!-- item-add.component.html -->
 <div class="container mt-4">
   <div class="card shadow">
-    <div class="card-header bg-primary text-white">
+    <div class="card-header text-white">
       <div class="d-flex justify-content-between align-items-center">
         <div>
           <h2 class="mb-0">Create New Item</h2>
-          <small class="text-white-50">Service Code: 5 | Master Type: 6</small>
+          <small class="text-white-60">Service Code: 5 | Master Type: 6</small>
         </div>
       </div>
     </div>
@@ -305,7 +305,7 @@
       <!-- Submit Button -->
       <div class="row mt-4">
         <div class="col-12 text-end">
-          <button type="submit" class="btn btn-primary" 
+          <button type="submit" class="btn btn-danger" 
                   [disabled]="isSubmitting || itemForm.invalid">
             <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
             {{ isSubmitting ? 'Adding Item...' : 'Add Item' }}
