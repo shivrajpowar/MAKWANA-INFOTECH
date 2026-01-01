@@ -6,6 +6,7 @@ import { LoginComponent } from './pages/signup/login.component';
 import { BusyLoginComponent } from './pages/busylogin/busylogin.component';
 import { BusyRegisterComponent } from './pages/busy-register/busy-register.component';
 import { CompanyComponent } from './pages/company/company.component';
+import { AboutUsComponent } from './pages/about-us/about-us.component';
 
 
 
@@ -20,6 +21,10 @@ export const routes: Routes = [
    {
       path: "products",
       loadChildren: () => import('./product-module/product-module.module').then(m => m.ProductModuleModule)
+   },
+   {
+      path: "Aboutus",
+      component:AboutUsComponent
    },
    
 
