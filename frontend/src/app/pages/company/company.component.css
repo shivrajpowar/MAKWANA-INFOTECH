@@ -112,7 +112,7 @@ table {
 }
 
 thead {
-  background: linear-gradient(135deg, #0d6efd, #0a58ca);
+  background: linear-gradient(135deg, #f5105c, #6f1331);
   color: #fff;
 }
 
@@ -163,6 +163,6 @@ tbody tr:hover {
   td::before {
     content: attr(data-label);
     font-weight: 600;
-    color: #0d6efd;
+    color: #f5105c;
   }
 }

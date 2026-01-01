@@ -1,43 +1,28 @@
 <div class="container mt-4">
   <div class="card">
-    <div class="card-header bg-primary text-white">
-      <h4 class="mb-0">Modify Item</h4>
+    <div class="card-header bg-primary text-white modify-header">
+  <div class="header-row">
+    <h4 class="mb-0 title">Modify Item</h4>
+
+    <div class="input-group master-input">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Enter Master Code"
+        [(ngModel)]="masterCode"
+        (keyup.enter)="onLoadData()"
+        [disabled]="isLoading"
+      />
+      <button class="btn btn-primary fw-semibold" (click)="onLoadData()">
+        LOAD
+      </button>
     </div>
-    
+  </div>
+</div>
+
     <div class="card-body">
       <!-- Master Code Input Section -->
-      <div class="row mb-4">
-        <div class="col-md-8">
-          <div class="input-group">
-            <span class="input-group-text">
-              <i class="bi bi-key"></i>
-            </span>
-            <input 
-              type="text" 
-              class="form-control" 
-              placeholder="Enter Item Code" 
-              [(ngModel)]="masterCode"
-              (keyup.enter)="onLoadData()"
-              [disabled]="isLoading"
-            >
-            <button 
-              class="btn btn-primary" 
-              type="button" 
-              (click)="onLoadData()"
-              
-            >
-              <span *ngIf="!isLoading">LOAD</span>
-              <span *ngIf="isLoading">
-                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                Loading...
-              </span>
-            </button>
-          </div>
-          <div class="form-text text-muted mt-2">
-            Enter an Item Code above to load and modify item data
-          </div>
-        </div>
-      </div>
+       
 
       <!-- Status Messages -->
       <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -63,9 +48,9 @@
       <!-- Form Section -->
       <div *ngIf="isDataLoaded" class="mt-4">
         <h5 class="border-bottom pb-2 mb-4">Item Details</h5>
-        
+
         <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-          
+
           <!-- Basic Information -->
           <div class="card mb-4">
             <div class="card-header bg-light">
@@ -77,8 +62,8 @@
                   <div class="mb-3">
                     <label class="form-label">Item Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" formControlName="Name">
-                    <div *ngIf="itemForm.get('Name')?.invalid && itemForm.get('Name')?.touched" 
-                         class="form-text text-danger">
+                    <div *ngIf="itemForm.get('Name')?.invalid && itemForm.get('Name')?.touched"
+                      class="form-text text-danger">
                       Item name is required
                     </div>
                   </div>
@@ -87,14 +72,14 @@
                   <div class="mb-3">
                     <label class="form-label">Print Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" formControlName="PrintName">
-                    <div *ngIf="itemForm.get('PrintName')?.invalid && itemForm.get('PrintName')?.touched" 
-                         class="form-text text-danger">
+                    <div *ngIf="itemForm.get('PrintName')?.invalid && itemForm.get('PrintName')?.touched"
+                      class="form-text text-danger">
                       Print name is required
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               <div class="row">
                 <div class="col-md-4">
                   <div class="mb-3">
@@ -179,7 +164,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="row">
                 <div class="col-md-4">
                   <div class="mb-3">
@@ -229,24 +214,27 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="row">
                 <div class="col-md-3">
                   <div class="mb-3">
                     <label class="form-label">Local Tax Rate (%)</label>
-                    <input type="number" class="form-control" formControlName="TaxRateLocal" step="0.01" min="0" max="100">
+                    <input type="number" class="form-control" formControlName="TaxRateLocal" step="0.01" min="0"
+                      max="100">
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="mb-3">
                     <label class="form-label">Local Tax Rate 1 (%)</label>
-                    <input type="number" class="form-control" formControlName="TaxRateLocal1" step="0.01" min="0" max="100">
+                    <input type="number" class="form-control" formControlName="TaxRateLocal1" step="0.01" min="0"
+                      max="100">
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="mb-3">
                     <label class="form-label">Central Tax Rate (%)</label>
-                    <input type="number" class="form-control" formControlName="TaxRateCentral" step="0.01" min="0" max="100">
+                    <input type="number" class="form-control" formControlName="TaxRateCentral" step="0.01" min="0"
+                      max="100">
                   </div>
                 </div>
                 <div class="col-md-3">
@@ -256,7 +244,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="row">
                 <div class="col-md-6">
                   <div class="mb-3">
@@ -323,7 +311,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="row">
                 <div class="col-md-3">
                   <div class="mb-3">

@@ -1,0 +1,226 @@
+/* =========================
+   PAGE BACKGROUND
+========================= */
+.container {
+  max-width: 1200px;
+}
+
+/* =========================
+   MAIN CARD
+========================= */
+.modify-card {
+  border-radius: 14px;
+  overflow: hidden;
+  border: none;
+  background: #ffffff;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================
+   HEADER
+========================= */
+.modify-header {
+  background: linear-gradient(135deg, #f5105c, #6f1331);
+  padding: 18px 22px;
+}
+
+/* Header Row */
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+/* =========================
+   PRIMARY BUTTON (Update Item)
+========================= */
+.btn-primary {
+  background: linear-gradient(135deg, #f5105c, #6f1331);
+  border: none;
+  border-radius: 12px;
+  padding: 10px 28px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.btn-primary:hover {
+  background: linear-gradient(135deg, #f5105c, #6f1331);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px #f5105c rgba(0, 0, 0, 0.25);
+}
+
+/* Active */
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+/* Disabled */
+.btn-primary:disabled {
+  background: #9bbcff;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* =========================
+   LOAD BUTTON (Header)
+========================= */
+.master-input .btn {
+  background: linear-gradient(135deg, #f5105c, #6f1331);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.master-input .btn:hover {
+  background: linear-gradient(135deg, #f5105c, #6f1331);
+  box-shadow: 0 6px 14px rgba(25, 135, 84, 0.4);
+  transform: translateY(-1px);
+}
+
+/* =========================
+   ICON INSIDE BUTTON
+========================= */
+.btn i {
+  font-size: 1rem;
+}
+
+
+/* Title */
+.header-row .title {
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* =========================
+   MASTER INPUT
+========================= */
+.master-input {
+  width: 360px;
+}
+
+.master-input input {
+  border-radius: 8px 0 0 8px;
+  border: none;
+  padding: 10px 14px;
+  font-weight: 500;
+}
+
+.master-input input:focus {
+  box-shadow: none;
+}
+
+.master-input button {
+  border-radius: 0 8px 8px 0;
+  padding: 0 18px;
+  font-weight: 600;
+  background: #ffffff;
+  color: #0d6efd;
+  transition: all 0.25s ease;
+}
+
+.master-input button:hover {
+  background: #e9f1ff;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   CARD BODY
+========================= */
+.card-body {
+  background: #f8f9fb;
+}
+
+/* =========================
+   SECTION CARDS
+========================= */
+.card.mb-4 {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* Section Header */
+.card-header.bg-light {
+  background: #f1f4f9 !important;
+  border-bottom: 1px solid #e3e6ec;
+  font-weight: 600;
+}
+
+/* =========================
+   FORM ELEMENTS
+========================= */
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #dce0e6;
+  padding: 9px 12px;
+  font-size: 0.9rem;
+}
+
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.15);
+}
+
+/* =========================
+   ALERTS
+========================= */
+.alert {
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+/* =========================
+   LOADING
+========================= */
+.spinner-border {
+  box-shadow: 0 0 0 6px rgba(13, 110, 253, 0.1);
+}
+
+/* =========================
+   ACTION BUTTON
+========================= */
+.btn-primary {
+  border-radius: 10px;
+  padding: 10px 26px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(13, 110, 253, 0.35);
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+.text-muted {
+  font-size: 0.95rem;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .header-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .master-input {
+    width: 100%;
+  }
+}

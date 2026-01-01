@@ -3,13 +3,11 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-          <h4 class="mb-0">Modify Account</h4>
+          <h4 class="text-light">Modify Account</h4>
           <div class="master-code-input">
             <form [formGroup]="masterCodeForm" (ngSubmit)="onMasterCodeSubmit()" class="d-flex">
               <div class="input-group">
-                <span class="input-group-text">
-                  <i class="bi bi-search"></i>
-                </span>
+                
                 <input type="text" 
                        formControlName="masterCode" 
                        class="form-control" 
