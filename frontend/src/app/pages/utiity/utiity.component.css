@@ -1,0 +1,73 @@
+.utility-container {
+  padding: 40px;
+  background: #f4f6f9;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: #2c3e50;
+}
+
+.utility-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.utility-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.utility-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.utility-card .icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.utility-card h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.utility-card p {
+  color: #555;
+  font-size: 14px;
+}
+
+.utility-card ul {
+  padding-left: 18px;
+  margin: 15px 0;
+}
+
+.utility-card ul li {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.utility-card .btn {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 25px;
+  text-decoration: none;
+  color: white;
+  font-size: 14px;
+}
+
+/* Gradient Themes */
+.ultraviewer .btn {
+  background: linear-gradient(45deg, #007bff, #00c6ff);
+}
+
+.anydesk .btn {
+  background: linear-gradient(45deg, #ff416c, #ff4b2b);
+}

@@ -7,6 +7,7 @@ import { BusyLoginComponent } from './pages/busylogin/busylogin.component';
 import { BusyRegisterComponent } from './pages/busy-register/busy-register.component';
 import { CompanyComponent } from './pages/company/company.component';
 import { AboutUsComponent } from './pages/about-us/about-us.component';
+import { UtiityComponent } from './pages/utiity/utiity.component';
 
 
 
@@ -25,6 +26,9 @@ export const routes: Routes = [
    {
       path: "Aboutus",
       component:AboutUsComponent
+   },{
+      path: 'Utility',
+      component:UtiityComponent
    },
    
 
