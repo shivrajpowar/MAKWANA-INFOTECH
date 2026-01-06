@@ -367,3 +367,123 @@
     gap: 5px;
   }
 }
+/* ================= COMMON SMOOTH TRANSITION ================= */
+* {
+  transition: all 0.3s ease;
+}
+
+/* ================= HEADER BANNER ANIMATION ================= */
+.header-banner {
+  animation: fadeSlideDown 0.9s ease-out;
+}
+
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= CONTENT SECTION ANIMATION ================= */
+.content-section {
+  animation: fadeUp 0.8s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= INFO CARDS HOVER ================= */
+.info-card {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-10px) scale(1.03);
+}
+
+/* ================= ICON PULSE ================= */
+.card-icon,
+.contact-icon {
+  transition: transform 0.3s ease;
+}
+
+.card-icon:hover,
+.contact-icon:hover {
+  transform: scale(1.15) rotate(6deg);
+}
+
+/* ================= CLICKABLE ICON GLOW ================= */
+.clickable-icon:hover {
+  transform: scale(1.2);
+}
+
+/* ================= PROPRIETOR SECTION ================= */
+.proprietor-section {
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ================= CONTACT ITEMS ================= */
+.contact-item {
+  transition: transform 0.3s ease;
+}
+
+.contact-item:hover {
+  transform: translateY(-8px);
+}
+
+/* ================= FEATURE LIST ANIMATION ================= */
+.feature-item {
+  transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+  transform: translateX(8px);
+}
+
+/* ================= LINK MICRO ANIMATION ================= */
+.phone-link,
+.email-text {
+  position: relative;
+}
+
+.phone-link::after,
+.email-text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 2px;
+  transition: width 0.3s ease;
+}
+
+.phone-link:hover::after,
+.email-text:hover::after {
+  width: 100%;
+}
+
+/* ================= SCROLL SMOOTHNESS ================= */
+html {
+  scroll-behavior: smooth;
+}
